@@ -1,3 +1,4 @@
+// src/pages/Testimonials.js
 // src/pages/Upload.js
 import React, { useState } from 'react';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -15,9 +16,9 @@ function Upload() {
         }
 
         // Optionally, add file type validation here
-        const acceptedFileTypes = ['image/jpeg', 'image/png', 'application/pdf']; // Example types
+        const acceptedFileTypes = ['image/jpeg', 'image/png', 'application/pdf', 'video/mp4']; // Example types
         if (!acceptedFileTypes.includes(file.type)) {
-            setError('File type not supported. Please upload a JPEG, PNG, or PDF.');
+            setError('File type not supported. Please upload a JPEG, PNG, PDF, or MP4 video.');
             return;
         }
 
@@ -48,7 +49,9 @@ function Upload() {
             {downloadURL && (
                 <div>
                     <p>File uploaded successfully!</p>
-                    <a href={downloadURL} download>Download File</a>
+                    <a href={downloadURL} download>
+                        Download File
+                    </a>
                 </div>
             )}
         </div>
