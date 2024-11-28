@@ -8,15 +8,16 @@ function Testimonials() {
     ];
 
     return (
-        <div>
+        <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
             <h2>Testimonials</h2>
-            <ul>
+            <ul style={{ listStyleType: 'none', padding: 0 }}>
                 {testimonials.map((t, index) => (
-                    <li key={index}>
+                    <li key={index} style={{ marginBottom: '10px', border: '1px solid #ccc', padding: '10px', borderRadius: '5px' }}>
                         <strong>{t.name}</strong>: {t.message}
                     </li>
                 ))}
             </ul>
+            {/* Future enhancement: Fetch testimonials from an API */}
         </div>
     );
 }
