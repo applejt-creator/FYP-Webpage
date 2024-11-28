@@ -1,6 +1,6 @@
 // src/pages/Login.js
 import React, { useState } from 'react';
-import { auth } from '../firebase';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 function Login({ setUser }) {
     const [email, setEmail] = useState('');
@@ -8,11 +8,12 @@ function Login({ setUser }) {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        const auth = getAuth();
         try {
-            const userCredential = await auth.signInWithEmailAndPassword(email, password);
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
             setUser(userCredential.user);
         } catch (error) {
-            console.error('Login error:', error);
+            console.error('Login error:', error.message);
         }
     };
 
