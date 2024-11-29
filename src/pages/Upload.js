@@ -14,9 +14,18 @@ function Upload() {
             return;
         }
 
-        const acceptedFileTypes = ['image/jpeg', 'image/png', 'application/pdf', 'video/mp4'];
+        // Updated accepted file types to include .exe and .zip
+        const acceptedFileTypes = [
+            'image/jpeg',
+            'image/png',
+            'application/pdf',
+            'video/mp4',
+            'application/zip', // for .zip files
+            'application/x-msdownload' // for .exe files
+        ];
+
         if (!acceptedFileTypes.includes(file.type)) {
-            setError('File type not supported. Please upload a JPEG, PNG, PDF, or MP4 video.');
+            setError('File type not supported. Please upload a JPEG, PNG, PDF, MP4 video, ZIP, or EXE file.');
             return;
         }
 

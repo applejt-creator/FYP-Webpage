@@ -1,15 +1,18 @@
 // src/components/Navbar.js
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { getAuth, signOut } from 'firebase/auth';
 
 function Navbar({ user, onLogout }) {
+    const navigate = useNavigate(); // Initialize the navigate function
+
     const handleLogout = async () => {
         const auth = getAuth();
         try {
             await signOut(auth);
             onLogout(); // Call the onLogout callback passed as a prop
+            navigate('/'); // Redirect to the main page after logout
         } catch (error) {
             console.error("Logout failed: ", error); // Log error if logout fails
         }
