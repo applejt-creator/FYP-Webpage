@@ -21,7 +21,7 @@ function App() {
       <Navbar user={user} onLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<h1>Welcome to the Project Website</h1>} />
-        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/login" element={user ? <h1>You are already logged in!</h1> : <Login setUser={setUser} />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/video" element={<Video videoSrc="/videos/path-to-your-video.mp4" />} />
         <Route path="/testimonials" element={<Testimonials />} />

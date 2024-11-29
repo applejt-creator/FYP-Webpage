@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { auth } from '../firebase'; // Ensure auth is properly initialized
 import { createUserWithEmailAndPassword } from 'firebase/auth'; // Correct function name
 
+
 function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
