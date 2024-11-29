@@ -1,3 +1,4 @@
+// src/pages/upload.js
 import React, { useState } from "react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase"; // Ensure correct import
@@ -14,23 +15,19 @@ function Upload() {
             return;
         }
 
-        // Supported file types
-        const acceptedFileTypes = ["image/jpeg", "image/png", "application/pdf", "video/mp4", "application/zip", "application/x-msdownload"];
-        const acceptedExtensions = [".jpeg", ".png", ".pdf", ".mp4", ".zip", ".exe"];
-
-        const fileExtension = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
-        if (!acceptedFileTypes.includes(file.type) && !acceptedExtensions.includes(fileExtension)) {
-            setError("File type not supported.");
-            return;
-        }
-
+        // Reset error and set loading state
         setError("");
         setLoading(true);
         try {
+            // Create a reference to the file in Firebase Storage
             const storageRef = ref(storage, `uploads/${Date.now()}_${file.name}`);
+            // Upload the file
             await uploadBytes(storageRef, file);
+            // Get the download URL
             const url = await getDownloadURL(storageRef);
+            // Set the download URL state
             setDownloadURL(url);
+            // Reset the file input
             setFile(null);
         } catch (e) {
             console.error("Upload error:", e);
