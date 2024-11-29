@@ -33,6 +33,9 @@ function Navbar({ user, onLogout }) {
                 <Button color="inherit" component={Link} to="/testimonials">
                     Testimonials
                 </Button>
+                <Button color="inherit" component={Link} to="/download"> {/* Add this line for Download page */}
+                    Download
+                </Button>
                 {user ? (
                     <>
                         <Button color="inherit" component={Link} to="/upload">
