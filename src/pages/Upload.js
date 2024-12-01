@@ -1,31 +1,12 @@
 import React, { useState } from "react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../firebase"; // Ensure correct import
+import { storage } from "../firebase";
 
 function Upload() {
     const [file, setFile] = useState(null);
     const [downloadURL, setDownloadURL] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-
-    const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile) {
-            const validTypes = ["image/jpeg", "image/png", "application/pdf"];
-            if (!validTypes.includes(selectedFile.type)) {
-                setError("Invalid file type. Please select a JPEG, PNG, or PDF file.");
-                setFile(null);
-                return;
-            }
-            if (selectedFile.size > 5 * 1024 * 1024) { // 5MB limit
-                setError("File size exceeds 5MB. Please select a smaller file.");
-                setFile(null);
-                return;
-            }
-            setError("");
-            setFile(selectedFile);
-        }
-    };
 
     const handleUpload = async () => {
         if (!file) {
@@ -35,21 +16,23 @@ function Upload() {
 
         setError("");
         setLoading(true);
+
         try {
+            // Create a storage reference
             const storageRef = ref(storage, `uploads/${Date.now()}_${file.name}`);
-            await uploadBytes(storageRef, file);
-            const url = await getDownloadURL(storageRef);
+
+            // Upload the file
+            const snapshot = await uploadBytes(storageRef, file);
+
+            // Retrieve the download URL
+            const url = await getDownloadURL(snapshot.ref);
+
             setDownloadURL(url);
+            console.log("File uploaded successfully:", url);
             setFile(null);
         } catch (e) {
             console.error("Upload error:", e);
-            if (e.code === "storage/unauthorized") {
-                setError("You do not have permission to upload files.");
-            } else if (e.code === "storage/quota-exceeded") {
-                setError("Storage quota exceeded. Please contact support.");
-            } else {
-                setError("File upload failed. Please try again.");
-            }
+            setError("File upload failed. Please check your Firebase setup and try again.");
         } finally {
             setLoading(false);
         }
@@ -57,15 +40,12 @@ function Upload() {
 
     return (
         <div>
-            <h2>Upload App</h2>
-            <input type="file" onChange={handleFileChange} />
-            {file && file.type.startsWith("image/") && (
-                <img
-                    src={URL.createObjectURL(file)}
-                    alt="Preview"
-                    style={{ width: "150px", marginTop: "10px" }}
-                />
-            )}
+            <h2>Upload File</h2>
+            <input
+                type="file"
+                onChange={(e) => setFile(e.target.files[0])}
+                accept="*/*"  // Allows all file types
+            />
             <button onClick={handleUpload} disabled={loading}>
                 {loading ? "Uploading..." : "Upload"}
             </button>
@@ -73,7 +53,7 @@ function Upload() {
             {downloadURL && (
                 <div>
                     <p>File uploaded successfully!</p>
-                    <a href={downloadURL} download>
+                    <a href={downloadURL} target="_blank" rel="noopener noreferrer">
                         Download File
                     </a>
                 </div>
