@@ -1,3 +1,4 @@
+// src/pages/App.js
 import React, { useEffect, useState } from 'react'; // React imports
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Router imports
 import { onAuthStateChanged } from 'firebase/auth'; // Firebase authentication

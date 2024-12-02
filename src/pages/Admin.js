@@ -1,3 +1,4 @@
+// src/pages/Admin.js
 import React, { useEffect, useState } from 'react';
 import { auth, db } from '../firebase'; // Ensure Firebase is initialized properly
 import { collection, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';

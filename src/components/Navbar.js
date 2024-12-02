@@ -1,3 +1,4 @@
+// src/components/Navbar.js
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
@@ -39,17 +40,23 @@ function Navbar({ user, onLogout }) {
                 {/* Role-based links */}
                 {user ? (
                     <>
-                        <Button color="inherit" component={Link} to="/upload">
-                            Upload App
-                        </Button>
+                        {/* Show 'Upload App' for admin and client only */}
+                        {(user.role === 'admin' || user.role === 'client') && (
+                            <Button color="inherit" component={Link} to="/upload">
+                                Upload App
+                            </Button>
+                        )}
+
+                        {/* Admin only link */}
                         {user.role === 'admin' && (
                             <Button color="inherit" component={Link} to="/admin">
                                 Admin Panel
                             </Button>
                         )}
+
                         <Button color="inherit" onClick={handleLogout}>
                             Logout
-                        </Button> 
+                        </Button>
                         <Typography variant="h6" sx={{ marginLeft: 2 }}>
                             Welcome, {user.name || user.email}
                         </Typography>

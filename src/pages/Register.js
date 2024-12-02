@@ -1,7 +1,9 @@
+// src/pages/Register.js
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase'; // Ensure Firestore and Auth are initialized properly
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 function Register() {
     const [name, setName] = useState('');
@@ -12,6 +14,8 @@ function Register() {
     const [phone, setPhone] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate(); // Initialize useNavigate hook
 
     const handleRegister = async (e) => {
         e.preventDefault(); // Prevent default form submission
@@ -41,6 +45,9 @@ function Register() {
             setRole('client');
             setCompany('');
             setPhone('');
+
+            // Redirect to the main page after successful registration
+            navigate('/'); // Navigate to home page (or the desired page)
         } catch (error) {
             setError(error.message);
         } finally {
