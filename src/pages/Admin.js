@@ -1,4 +1,3 @@
-// src/pages/Admin.js
 import React, { useEffect, useState } from 'react';
 import { auth, db } from '../firebase'; // Ensure Firebase is initialized properly
 import { collection, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
@@ -8,7 +7,7 @@ function AdminPage() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [newPassword, setNewPassword] = useState(''); // State for new password input
+    const [loadingAction, setLoadingAction] = useState(false); // State for managing action loading
     const [selectedUser, setSelectedUser] = useState(null); // Keep track of which user the admin is resetting the password for
 
     // Fetch users from Firestore
@@ -30,35 +29,46 @@ function AdminPage() {
         fetchUsers();
     }, []);
 
-    // Handle suspending a user
-    const handleSuspend = async (userId, email) => {
+    // Handle suspending or unsuspending a user
+    const handleSuspendToggle = async (userId, email, isSuspended) => {
+        setLoadingAction(true); // Set loading action state
         try {
-            // Disable the user account in Firestore
+            // Update the user's suspension status in Firestore
             const userDoc = doc(db, 'users', userId);
-            await updateDoc(userDoc, { isSuspended: true });
+            await updateDoc(userDoc, { isSuspended: !isSuspended });
 
-            // Optionally, disable the Firebase Authentication user
-            const user = await auth.getUserByEmail(email);
-            await auth.updateUser(user.uid, { disabled: true });
+            // Optionally, disable or enable the Firebase Authentication user
+            const firebaseUser = await auth.getUserByEmail(email);
+            await auth.updateUser(firebaseUser.uid, { disabled: !isSuspended });
 
-            alert('User suspended successfully!');
+            // Update the user in the state to reflect the change immediately
+            setUsers((prevUsers) =>
+                prevUsers.map((user) =>
+                    user.id === userId ? { ...user, isSuspended: !isSuspended } : user
+                )
+            );
+
+            alert(isSuspended ? 'User unsuspended successfully!' : 'User suspended successfully!');
         } catch (error) {
-            console.error('Error suspending user:', error);
-            setError('Failed to suspend user.');
+            console.error('Error toggling suspension status:', error);
+            setError('Failed to update user suspension status.');
+        } finally {
+            setLoadingAction(false); // Reset loading state
         }
     };
 
     // Handle deleting a user
     const handleDelete = async (userId, email) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
+            setLoadingAction(true); // Set loading action state
             try {
                 // Delete user from Firestore
                 const userDoc = doc(db, 'users', userId);
                 await deleteDoc(userDoc);
 
                 // Delete user from Firebase Authentication
-                const user = await auth.getUserByEmail(email);
-                await auth.deleteUser(user.uid);
+                const firebaseUser = await auth.getUserByEmail(email);
+                await auth.deleteUser(firebaseUser.uid);
 
                 // Refetch the users list after deletion
                 setUsers(users.filter((user) => user.id !== userId));
@@ -67,18 +77,23 @@ function AdminPage() {
             } catch (error) {
                 console.error('Error deleting user:', error);
                 setError('Failed to delete user.');
+            } finally {
+                setLoadingAction(false); // Reset loading state
             }
         }
     };
 
     // Handle sending password reset email
     const handleResetPassword = async (email) => {
+        setLoadingAction(true); // Set loading action state
         try {
             await sendPasswordResetEmail(auth, email);
             alert('Password reset email sent successfully!');
         } catch (error) {
             console.error('Error sending password reset email:', error);
             setError('Failed to send password reset email.');
+        } finally {
+            setLoadingAction(false); // Reset loading state
         }
     };
 
@@ -98,12 +113,21 @@ function AdminPage() {
                             <strong>Status:</strong> {user.isSuspended ? 'Suspended' : 'Active'}
                         </p>
                         <button
-                            onClick={() => handleSuspend(user.id, user.email)}
-                            disabled={user.isSuspended}
+                            onClick={() => handleSuspendToggle(user.id, user.email, user.isSuspended)}
+                            disabled={loadingAction}
                         >
-                            {user.isSuspended ? 'Already Suspended' : 'Suspend'}
+                            {loadingAction
+                                ? 'Processing...'
+                                : user.isSuspended
+                                    ? 'Unsuspend'
+                                    : 'Suspend'}
                         </button>
-                        <button onClick={() => handleDelete(user.id, user.email)}>Delete</button>
+                        <button
+                            onClick={() => handleDelete(user.id, user.email)}
+                            disabled={loadingAction}
+                        >
+                            {loadingAction ? 'Processing...' : 'Delete'}
+                        </button>
 
                         {/* Admin enters a new password */}
                         <button onClick={() => setSelectedUser(user)}>
@@ -114,8 +138,9 @@ function AdminPage() {
                             <div>
                                 <button
                                     onClick={() => handleResetPassword(user.email)}
+                                    disabled={loadingAction}
                                 >
-                                    Send Password Reset Email
+                                    {loadingAction ? 'Processing...' : 'Send Password Reset Email'}
                                 </button>
                             </div>
                         )}
