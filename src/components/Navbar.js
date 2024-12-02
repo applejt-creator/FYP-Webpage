@@ -1,4 +1,3 @@
-// src/components/Navbar.js
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
@@ -36,8 +35,15 @@ function Navbar({ user, onLogout }) {
                 <Button color="inherit" component={Link} to="/download">
                     Download
                 </Button>
+
+                {/* Role-based links */}
                 {user ? (
                     <>
+                        {user.role === 'admin' && (
+                            <Button color="inherit" component={Link} to="/admin">
+                                Admin Panel
+                            </Button>
+                        )}
                         <Button color="inherit" component={Link} to="/upload">
                             Upload App
                         </Button>

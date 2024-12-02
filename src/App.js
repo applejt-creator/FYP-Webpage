@@ -10,13 +10,15 @@ import Upload from './pages/Upload';
 import Video from './pages/Video';
 import Testimonials from './pages/Testimonials';
 import Download from './pages/Download';
+import Admin from './pages/Admin'; // Admin page
 
+// Fetch user details from Firestore
 async function fetchUserDetails(uid) {
   const userDoc = doc(db, 'users', uid);
   const userSnap = await getDoc(userDoc);
 
   if (userSnap.exists()) {
-    return userSnap.data(); // Returns user details, including the name
+    return userSnap.data(); // Returns user details, including the role
   } else {
     console.error('User document not found in Firestore.');
     return null;
@@ -31,7 +33,8 @@ function App() {
       if (authUser) {
         const userDetails = await fetchUserDetails(authUser.uid);
         if (userDetails) {
-          setUser({ ...authUser, ...userDetails }); // Combine auth user with Firestore data
+          // Add role info to the user object (e.g., admin or player)
+          setUser({ ...authUser, ...userDetails });
         }
       } else {
         setUser(null);
@@ -56,6 +59,13 @@ function App() {
         <Route path="/testimonials" element={<Testimonials />} />
         <Route path="/download" element={<Download />} />
         <Route path="/upload" element={user ? <Upload /> : <Navigate to="/login" />} />
+
+        {/* Admin Route - Only accessible by admin users */}
+        <Route
+          path="/admin"
+          element={user && user.role === 'admin' ? <Admin /> : <Navigate to="/" />}
+        />
+
         <Route path="*" element={<h1>404: Page Not Found</h1>} />
       </Routes>
     </Router>
