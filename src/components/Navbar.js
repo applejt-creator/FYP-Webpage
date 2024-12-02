@@ -39,17 +39,17 @@ function Navbar({ user, onLogout }) {
                 {/* Role-based links */}
                 {user ? (
                     <>
+                        <Button color="inherit" component={Link} to="/upload">
+                            Upload App
+                        </Button>
                         {user.role === 'admin' && (
                             <Button color="inherit" component={Link} to="/admin">
                                 Admin Panel
                             </Button>
                         )}
-                        <Button color="inherit" component={Link} to="/upload">
-                            Upload App
-                        </Button>
                         <Button color="inherit" onClick={handleLogout}>
                             Logout
-                        </Button>
+                        </Button> 
                         <Typography variant="h6" sx={{ marginLeft: 2 }}>
                             Welcome, {user.name || user.email}
                         </Typography>
