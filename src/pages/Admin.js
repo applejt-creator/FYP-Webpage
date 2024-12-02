@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { auth, db } from '../firebase'; // Ensure Firebase is initialized properly
 import { collection, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
-import { sendPasswordResetEmail } from 'firebase/auth';  // Single import at the top
+import { sendPasswordResetEmail } from 'firebase/auth'; // Import for sending password reset email
 
 function AdminPage() {
     const [users, setUsers] = useState([]);
@@ -71,21 +71,14 @@ function AdminPage() {
         }
     };
 
-    // Handle manually changing the user's password
-    const handleChangePassword = async (userId, newPassword) => {
+    // Handle sending password reset email
+    const handleResetPassword = async (email) => {
         try {
-            // Get the Firebase user by email
-            const user = await auth.getUserByEmail(userId);
-
-            // Update password in Firebase Authentication
-            await auth.updateUser(user.uid, {
-                password: newPassword,
-            });
-
-            alert(`Password for ${user.email} has been successfully changed.`);
+            await sendPasswordResetEmail(auth, email);
+            alert('Password reset email sent successfully!');
         } catch (error) {
-            console.error('Error changing password:', error);
-            setError('Failed to change password.');
+            console.error('Error sending password reset email:', error);
+            setError('Failed to send password reset email.');
         }
     };
 
@@ -119,17 +112,10 @@ function AdminPage() {
 
                         {selectedUser?.id === user.id && (
                             <div>
-                                <input
-                                    type="password"
-                                    value={newPassword}
-                                    onChange={(e) => setNewPassword(e.target.value)}
-                                    placeholder="Enter new password"
-                                />
                                 <button
-                                    onClick={() => handleChangePassword(user.id, newPassword)}
-                                    disabled={!newPassword}
+                                    onClick={() => handleResetPassword(user.email)}
                                 >
-                                    Change Password
+                                    Send Password Reset Email
                                 </button>
                             </div>
                         )}
