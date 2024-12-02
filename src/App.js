@@ -1,20 +1,48 @@
-// src/App.js
-import React, { useState } from 'react'; // Ensure this line is at the top
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import React, { useEffect, useState } from 'react'; // React imports
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Router imports
+import { onAuthStateChanged } from 'firebase/auth'; // Firebase authentication
+import { doc, getDoc } from 'firebase/firestore'; // Firestore
+import { auth, db } from './firebase'; // Your Firebase configuration
+import Navbar from './components/Navbar'; // Components
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Upload from './pages/Upload';
 import Video from './pages/Video';
 import Testimonials from './pages/Testimonials';
-import Register from './pages/Register';
-import Download from './pages/Download'; // Import the Download component
+import Download from './pages/Download';
+
+async function fetchUserDetails(uid) {
+  const userDoc = doc(db, 'users', uid);
+  const userSnap = await getDoc(userDoc);
+
+  if (userSnap.exists()) {
+    return userSnap.data(); // Returns user details, including the name
+  } else {
+    console.error('User document not found in Firestore.');
+    return null;
+  }
+}
 
 function App() {
   const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
+      if (authUser) {
+        const userDetails = await fetchUserDetails(authUser.uid);
+        if (userDetails) {
+          setUser({ ...authUser, ...userDetails }); // Combine auth user with Firestore data
+        }
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup subscription on unmount
+  }, []);
+
   const handleLogout = () => {
     setUser(null);
-    console.log('User  logged out');
   };
 
   return (
@@ -22,15 +50,16 @@ function App() {
       <Navbar user={user} onLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<h1>Welcome to the Project Website</h1>} />
-        <Route path="/login" element={user ? <h1>You are already logged in!</h1> : <Login setUser={setUser} />} />
-        <Route path="/upload" element={<Upload />} />
-        <Route path="/download" element={<Download />} /> {/* Add the Download route */}
+        <Route path="/login" element={user ? <Navigate to="/" /> : <Login setUser={setUser} />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/video" element={<Video videoSrc="/videos/path-to-your-video.mp4" />} />
         <Route path="/testimonials" element={<Testimonials />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/download" element={<Download />} />
+        <Route path="/upload" element={user ? <Upload /> : <Navigate to="/login" />} />
+        <Route path="*" element={<h1>404: Page Not Found</h1>} />
       </Routes>
     </Router>
   );
 }
 
-export default App; // Ensure this line is at the end of the file
+export default App;

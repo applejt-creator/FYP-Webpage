@@ -1,20 +1,20 @@
 // src/components/Navbar.js
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, signOut } from 'firebase/auth';
 
 function Navbar({ user, onLogout }) {
-    const navigate = useNavigate(); // Initialize the navigate function
+    const navigate = useNavigate();
 
     const handleLogout = async () => {
         const auth = getAuth();
         try {
             await signOut(auth);
-            onLogout(); // Call the onLogout callback passed as a prop
-            navigate('/'); // Redirect to the main page after logout
+            onLogout();
+            navigate('/'); // Redirect to home page
         } catch (error) {
-            console.error("Logout failed: ", error); // Log error if logout fails
+            console.error("Logout failed: ", error);
         }
     };
 
@@ -33,7 +33,7 @@ function Navbar({ user, onLogout }) {
                 <Button color="inherit" component={Link} to="/testimonials">
                     Testimonials
                 </Button>
-                <Button color="inherit" component={Link} to="/download"> {/* Add this line for Download page */}
+                <Button color="inherit" component={Link} to="/download">
                     Download
                 </Button>
                 {user ? (
@@ -44,6 +44,9 @@ function Navbar({ user, onLogout }) {
                         <Button color="inherit" onClick={handleLogout}>
                             Logout
                         </Button>
+                        <Typography variant="h6" sx={{ marginLeft: 2 }}>
+                            Welcome, {user.name || user.email}
+                        </Typography>
                     </>
                 ) : (
                     <>
@@ -54,11 +57,6 @@ function Navbar({ user, onLogout }) {
                             Register
                         </Button>
                     </>
-                )}
-                {user && (
-                    <Typography variant="h6" sx={{ marginLeft: 2 }}>
-                        Welcome, {user.name}
-                    </Typography>
                 )}
             </Toolbar>
         </AppBar>

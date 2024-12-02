@@ -4,36 +4,47 @@ import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase'; // Ensure Firestore and Auth are initialized properly
 
 function Register() {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('client'); // Default role (can be dynamic if needed)
+    const [role, setRole] = useState('client');
+    const [company, setCompany] = useState('');
+    const [phone, setPhone] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleRegister = async (e) => {
         e.preventDefault(); // Prevent default form submission
         setError('');
-        setLoading(true); // Set loading state to true
+        setLoading(true);
 
         try {
             // Step 1: Register user with Firebase Authentication
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // Step 2: Save user role in Firestore
+            // Step 2: Save user details in Firestore
             const userDoc = doc(db, 'users', user.uid); // Create a document in 'users' collection
             await setDoc(userDoc, {
+                name: name,
                 email: user.email,
                 role: role, // Role, e.g., 'client' or 'player'
+                company: company,
+                phone: phone,
             });
 
-            alert('Account created successfully with role: ' + role);
-            setEmail(''); // Clear email field
-            setPassword(''); // Clear password field
+            alert(`Account created successfully with role: ${role}`);
+            // Reset form fields
+            setName('');
+            setEmail('');
+            setPassword('');
+            setRole('client');
+            setCompany('');
+            setPhone('');
         } catch (error) {
-            setError(error.message); // Display error message
+            setError(error.message);
         } finally {
-            setLoading(false); // Reset loading state
+            setLoading(false);
         }
     };
 
@@ -41,6 +52,15 @@ function Register() {
         <div>
             <h2>Register</h2>
             <form onSubmit={handleRegister}>
+                <div>
+                    <label>Name:</label>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                </div>
                 <div>
                     <label>Email:</label>
                     <input
@@ -66,8 +86,24 @@ function Register() {
                         <option value="player">Player</option>
                     </select>
                 </div>
+                <div>
+                    <label>Company:</label>
+                    <input
+                        type="text"
+                        value={company}
+                        onChange={(e) => setCompany(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>Phone:</label>
+                    <input
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                    />
+                </div>
                 <button type="submit" disabled={loading}>
-                    {loading ? 'Loading...' : 'Register'}
+                    {loading ? 'Registering...' : 'Register'}
                 </button>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
             </form>
