@@ -27,25 +27,31 @@ async function fetchUserDetails(uid) {
 
 function App() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // Track loading state
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
       if (authUser) {
         const userDetails = await fetchUserDetails(authUser.uid);
         if (userDetails) {
-          // Add role info to the user object (e.g., admin or player)
           setUser({ ...authUser, ...userDetails });
         }
       } else {
         setUser(null);
       }
+      setLoading(false); // Set loading to false once the user is fetched
     });
 
-    return () => unsubscribe(); // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, []);
+
+  if (loading) {
+    return <h1>Loading...</h1>; // Display a loading message or spinner
+  }
 
   const handleLogout = () => {
     setUser(null);
+    auth.signOut(); // Also sign out from Firebase
   };
 
   return (
@@ -59,13 +65,10 @@ function App() {
         <Route path="/testimonials" element={<Testimonials />} />
         <Route path="/download" element={<Download />} />
         <Route path="/upload" element={user ? <Upload /> : <Navigate to="/login" />} />
-
-        {/* Admin Route - Only accessible by admin users */}
         <Route
           path="/admin"
           element={user && user.role === 'admin' ? <Admin /> : <Navigate to="/" />}
         />
-
         <Route path="*" element={<h1>404: Page Not Found</h1>} />
       </Routes>
     </Router>

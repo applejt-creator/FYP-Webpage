@@ -1,3 +1,4 @@
+// firebase.js or firebase-config.js
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -23,7 +24,7 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-// Optional: Analytics
+// Optional: Initialize Firebase Analytics
 let analytics;
 try {
   analytics = getAnalytics(app);
@@ -31,5 +32,5 @@ try {
   console.warn("Analytics not initialized:", e);
 }
 
-// Export the app (optional, if needed elsewhere)
+// Export the app instance (optional)
 export default app;
