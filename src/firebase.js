@@ -20,7 +20,29 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-
-export const auth = firebase.auth();
 export const db = firebase.firestore();
 export default firebase;
+
+const storage = getStorage(app);
+
+const auth = getAuth(app);
+
+const functions = getFunctions(app)
+
+const firestore = getFirestore(app)
+
+let currentUser
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in
+    currentUser = user
+    console.log(user.uid); // Print the user's ID
+  } else {
+    // No user is signed in
+    currentUser = null; 
+    console.log("No user signed in");
+  }
+});
+
+export {app, auth, functions, currentUser, storage, firestore};
