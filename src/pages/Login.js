@@ -15,7 +15,7 @@ function Login({ setUser }) {
         setError(''); // Clear previous errors
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            setUser(userCredential.user);
+            setUser(userCredential.user); // Set user state in App.js
         } catch (error) {
             setError('Login failed: ' + error.message);
         } finally {
