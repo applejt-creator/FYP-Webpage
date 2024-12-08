@@ -1,3 +1,4 @@
+// src/pages/Admin.js
 import React, { useEffect, useState } from 'react';
 import { auth, db } from '../firebase'; // Ensure Firebase is initialized properly
 import { collection, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
@@ -31,21 +32,16 @@ function AdminPage() {
 
     // Handle suspending or unsuspending a user
     const handleSuspendToggle = async (userId, email, isSuspended) => {
-        setLoadingAction(true); // Set loading action state
+        setLoadingAction(true);
         try {
-            // Update the user's suspension status in Firestore
             const userDoc = doc(db, 'users', userId);
             await updateDoc(userDoc, { isSuspended: !isSuspended });
 
-            // Optionally, disable or enable the Firebase Authentication user
             const firebaseUser = await auth.getUserByEmail(email);
             await auth.updateUser(firebaseUser.uid, { disabled: !isSuspended });
 
-            // Update the user in the state to reflect the change immediately
             setUsers((prevUsers) =>
-                prevUsers.map((user) =>
-                    user.id === userId ? { ...user, isSuspended: !isSuspended } : user
-                )
+                prevUsers.map((user) => (user.id === userId ? { ...user, isSuspended: !isSuspended } : user))
             );
 
             alert(isSuspended ? 'User unsuspended successfully!' : 'User suspended successfully!');
@@ -53,24 +49,21 @@ function AdminPage() {
             console.error('Error toggling suspension status:', error);
             setError('Failed to update user suspension status.');
         } finally {
-            setLoadingAction(false); // Reset loading state
+            setLoadingAction(false);
         }
     };
 
     // Handle deleting a user
     const handleDelete = async (userId, email) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
-            setLoadingAction(true); // Set loading action state
+            setLoadingAction(true);
             try {
-                // Delete user from Firestore
                 const userDoc = doc(db, 'users', userId);
                 await deleteDoc(userDoc);
 
-                // Delete user from Firebase Authentication
                 const firebaseUser = await auth.getUserByEmail(email);
                 await auth.deleteUser(firebaseUser.uid);
 
-                // Refetch the users list after deletion
                 setUsers(users.filter((user) => user.id !== userId));
 
                 alert('User deleted successfully!');
@@ -78,14 +71,14 @@ function AdminPage() {
                 console.error('Error deleting user:', error);
                 setError('Failed to delete user.');
             } finally {
-                setLoadingAction(false); // Reset loading state
+                setLoadingAction(false);
             }
         }
     };
 
     // Handle sending password reset email
     const handleResetPassword = async (email) => {
-        setLoadingAction(true); // Set loading action state
+        setLoadingAction(true);
         try {
             await sendPasswordResetEmail(auth, email);
             alert('Password reset email sent successfully!');
@@ -93,7 +86,7 @@ function AdminPage() {
             console.error('Error sending password reset email:', error);
             setError('Failed to send password reset email.');
         } finally {
-            setLoadingAction(false); // Reset loading state
+            setLoadingAction(false);
         }
     };
 
@@ -103,10 +96,10 @@ function AdminPage() {
     return (
         <div>
             <h1>Admin Dashboard</h1>
-            {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <ul>
                 {users.map((user) => (
-                    <li key={user.id}>
+                    <li key={user.id} style={{ marginBottom: '20px', padding: '10px', border: '1px solid #ddd', borderRadius: '5px' }}>
                         <p>
                             <strong>Name:</strong> {user.name} <br />
                             <strong>Email:</strong> {user.email} <br />
@@ -115,30 +108,28 @@ function AdminPage() {
                         <button
                             onClick={() => handleSuspendToggle(user.id, user.email, user.isSuspended)}
                             disabled={loadingAction}
+                            style={styles.actionButton}
                         >
-                            {loadingAction
-                                ? 'Processing...'
-                                : user.isSuspended
-                                    ? 'Unsuspend'
-                                    : 'Suspend'}
+                            {loadingAction ? 'Processing...' : user.isSuspended ? 'Unsuspend' : 'Suspend'}
                         </button>
                         <button
                             onClick={() => handleDelete(user.id, user.email)}
                             disabled={loadingAction}
+                            style={styles.actionButton}
                         >
                             {loadingAction ? 'Processing...' : 'Delete'}
                         </button>
 
-                        {/* Admin enters a new password */}
-                        <button onClick={() => setSelectedUser(user)}>
+                        <button onClick={() => setSelectedUser(user)} style={styles.actionButton}>
                             Reset Password
                         </button>
 
                         {selectedUser?.id === user.id && (
-                            <div>
+                            <div style={styles.resetPasswordForm}>
                                 <button
                                     onClick={() => handleResetPassword(user.email)}
                                     disabled={loadingAction}
+                                    style={styles.actionButton}
                                 >
                                     {loadingAction ? 'Processing...' : 'Send Password Reset Email'}
                                 </button>
@@ -150,5 +141,25 @@ function AdminPage() {
         </div>
     );
 }
+
+const styles = {
+    actionButton: {
+        margin: '5px',
+        padding: '5px 10px',
+        backgroundColor: '#007BFF',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        transition: 'background-color 0.3s',
+    },
+    actionButtonDisabled: {
+        backgroundColor: '#ddd',
+        cursor: 'not-allowed',
+    },
+    resetPasswordForm: {
+        marginTop: '10px',
+    }
+};
 
 export default AdminPage;
