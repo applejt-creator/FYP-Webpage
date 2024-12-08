@@ -1,9 +1,10 @@
 // firebase.js or firebase-config.js
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAnalytics } from "firebase/analytics";
+import { getFunctions } from "firebase/functions";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -16,10 +17,28 @@ const firebaseConfig = {
   measurementId: "G-T8SE250HF9",
 };
 
-// Initialize Firebase app
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const firebaseApp = initializeApp(firebaseConfig);
 
-export const auth = firebase.auth();
-export const db = firebase.firestore();
-export default firebase;
+const storage = getStorage(firebaseApp);
+
+const auth = getAuth(firebaseApp);
+
+const functions = getFunctions(firebaseApp)
+
+const db = getFirestore(firebaseApp)
+
+let currentUser
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in
+    currentUser = user
+    console.log(user.uid); // Print the user's ID
+  } else {
+    // No user is signed in
+    currentUser = null; 
+    console.log("No user signed in");
+  }
+});
+
+export {firebaseApp, auth, functions, currentUser, storage, db};

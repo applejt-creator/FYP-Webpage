@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase'; // Ensure Firestore and Auth are initialized properly
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { user } from '../accountEntity';
 
 function Register() {
     const [name, setName] = useState('');
@@ -24,18 +25,20 @@ function Register() {
 
         try {
             // Step 1: Register user with Firebase Authentication
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
+            // const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            // const user = userCredential.user;
 
-            // Step 2: Save user details in Firestore
-            const userDoc = doc(db, 'users', user.uid); // Create a document in 'users' collection
-            await setDoc(userDoc, {
-                name: name,
-                email: user.email,
-                role: role, // Role, e.g., 'client' or 'player'
-                company: company,
-                phone: phone,
-            });
+            // // Step 2: Save user details in Firestore
+            // const userDoc = doc(db, 'users', user.uid); // Create a document in 'users' collection
+            // await setDoc(userDoc, {
+            //     name: name,
+            //     email: user.email,
+            //     role: role, // Role, e.g., 'client' or 'player'
+            //     company: company,
+            //     phone: phone,
+            // });
+
+            user.createUser(email, password, role, company, phone, name)
 
             alert(`Account created successfully with role: ${role}`);
             // Reset form fields

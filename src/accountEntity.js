@@ -2,7 +2,7 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
   } from "firebase/auth";
-  import { auth, firestore } from "./firebase";
+  import { auth, db } from "./firebase";
   import {
     collection,
     getDocs,
@@ -16,10 +16,10 @@ import {
   
   class User {
     constructor() {
-      this.db = firestore;
+      this.db = db;
     }
   
-    async createUser(email, password, firstName, lastName) {
+    async createUser(email, password, role, company, phone, name) {
       let userCredential;
       //creating user authentication
       try {
@@ -36,13 +36,12 @@ import {
         const userID = userCredential.user.uid;
         const userDocRef = doc(this.db, "users", userID);
         await setDoc(userDocRef, {
+          name: name,
           email: email,
           password: password,
-          firstName: firstName,
-          lastName: lastName,
-          role: "None",
-          status: "Active",
-          // Add other details as needed
+          role: role, // Role, e.g., 'client' or 'player'
+          company: company,
+          phone: phone,
         });
         console.log("User data successfully created and stored in database");
         return true;
