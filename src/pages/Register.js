@@ -1,9 +1,7 @@
 // src/pages/Register.js
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase'; // Ensure Firestore and Auth are initialized properly
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { user } from '../accountEntity';
 
 function Register() {
     const [name, setName] = useState('');
