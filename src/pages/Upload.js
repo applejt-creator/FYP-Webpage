@@ -42,7 +42,7 @@ function Upload() {
 
         try {
             // Create a storage reference
-            const storageRef = ref(storage, `uploads/${Date.now()}_${file.name}`);
+            const storageRef = ref(storage, `gs://fpy-24-s4-01.firebasestorage.app/uploads/${file.name}`);
 
             // Upload the file
             const snapshot = await uploadBytes(storageRef, file);

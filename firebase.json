@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "fyp24s401",
+    "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",
