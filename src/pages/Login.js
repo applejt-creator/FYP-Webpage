@@ -79,44 +79,86 @@ function Login({ setUser }) {
 }
 
 const styles = {
+    // Container Styles (Red Gaming Theme)
     container: {
         maxWidth: '400px',
         margin: '0 auto',
-        padding: '20px',
-        fontFamily: 'Arial, sans-serif',
+        padding: '30px',
+        fontFamily: 'Orbitron, sans-serif', // Futuristic font for a modern gaming feel
         textAlign: 'center',
-        border: '1px solid #ddd',
-        borderRadius: '8px',
-        backgroundColor: '#f9f9f9',
+        border: '1px solid #ff4d4d', // Neon red border
+        borderRadius: '15px', // Rounded corners for a clean, modern look
+        backgroundColor: '#1a1a1a', // Dark background to enhance neon elements
+        boxShadow: '0 8px 15px rgba(255, 0, 0, 0.3)', // Neon red glow effect
+        transition: 'all 0.3s ease', // Smooth transition for hover effects
     },
+
+    // Header Styles (Red Neon Glow)
     header: {
-        color: '#333',
+        color: '#ff4d4d', // Neon red text for header
+        fontSize: '32px', // Slightly larger text for the header
+        fontWeight: '700',
+        marginBottom: '20px',
+        textShadow: '0 0 15px rgba(255, 77, 77, 0.8)', // Glowing text-shadow effect
     },
+
+    // Form Styles
     form: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '10px',
+        gap: '15px', // Increase gap between form elements for a spacious feel
     },
+
+    // Input Field Styles (Futuristic Red)
     input: {
-        padding: '10px',
+        padding: '12px',
         fontSize: '16px',
-        border: '1px solid #ccc',
-        borderRadius: '5px',
-    },
-    button: {
-        padding: '10px',
-        fontSize: '16px',
+        border: '2px solid #ff4d4d', // Red border for input fields
+        borderRadius: '8px', // Rounded input fields
+        backgroundColor: '#2a2a2a', // Dark input field background
         color: '#fff',
-        backgroundColor: '#007BFF',
+        outline: 'none',
+        transition: 'border-color 0.3s, box-shadow 0.3s',
+    },
+
+    // Input Focus Styles (Neon Red Glow on Focus)
+    inputFocus: {
+        borderColor: '#ff4d4d', // Red border when focused
+        boxShadow: '0 0 8px rgba(255, 77, 77, 0.8)', // Glowing effect when focused
+    },
+
+    // Button Styles (Futuristic Red and Blue Gradient)
+    button: {
+        padding: '12px',
+        fontSize: '18px',
+        color: '#fff',
+        backgroundColor: 'linear-gradient(90deg, #ff4d4d, #ff0033)', // Red gradient for button
         border: 'none',
-        borderRadius: '5px',
+        borderRadius: '8px', // Rounded button
         cursor: 'pointer',
+        transition: 'transform 0.3s, box-shadow 0.3s ease',
     },
+
+    // Button Hover Effect (Glow and Scaling)
+    buttonHover: {
+        transform: 'scale(1.05)', // Slight zoom-in effect
+        boxShadow: '0 0 15px rgba(255, 0, 0, 0.7)', // Glowing red effect on hover
+    },
+
+    // Error Message Styles (Neon Red Glow)
     error: {
-        marginTop: '10px',
-        color: 'red',
+        marginTop: '15px',
+        color: '#ff6666', // Lighter neon red for error messages
         fontSize: '14px',
+        textShadow: '0 0 10px rgba(255, 102, 102, 0.8)', // Glow effect on error message
     },
+
+    // Disabled Button Style (Dimmed Appearance)
+    buttonDisabled: {
+        backgroundColor: '#444',
+        color: '#999',
+        cursor: 'not-allowed',
+    }
 };
 
 export default Login;

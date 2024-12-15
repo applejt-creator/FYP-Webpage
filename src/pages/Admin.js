@@ -143,6 +143,39 @@ function AdminPage() {
 }
 
 const styles = {
+    container: {
+        padding: '20px',
+        maxWidth: '900px',
+        margin: 'auto',
+        fontFamily: 'Orbitron, sans-serif', // Futuristic font for the gaming theme
+        background: 'radial-gradient(circle, #000000 50%, #0f0f10 100%)', // Glowing dark background
+        color: '#fff', // White text
+        borderRadius: '15px',
+        boxShadow: '0 0 30px rgba(255, 0, 102, 0.6)', // Glowing shadow effect
+        overflow: 'hidden',
+    },
+    heading: {
+        textAlign: 'center',
+        marginBottom: '20px',
+        fontSize: '30px', // Slightly larger heading
+        color: '#ff005c', // Neon pink color
+        textTransform: 'uppercase',
+        textShadow: '0 0 15px #ff005c, 0 0 30px rgba(255, 0, 92, 0.5)', // Glowing text effect
+    },
+    list: {
+        listStyleType: 'none',
+        padding: 0,
+        margin: 0,
+    },
+    card: {
+        marginBottom: '15px',
+        border: '2px solid rgba(255, 0, 102, 0.4)', // Neon pink border
+        padding: '15px',
+        borderRadius: '8px',
+        backgroundColor: '#141414', // Dark background for each card
+        boxShadow: '0 0 20px rgba(255, 0, 102, 0.6)', // Glowing effect around each card
+        transition: 'transform 0.3s, box-shadow 0.3s',
+    },
     actionButton: {
         margin: '5px',
         padding: '5px 10px',

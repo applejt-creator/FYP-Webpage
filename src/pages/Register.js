@@ -151,44 +151,92 @@ function Register() {
 }
 
 const styles = {
+    // Container Styles (Red Gaming Theme)
     container: {
         maxWidth: '400px',
         margin: '0 auto',
-        padding: '20px',
-        fontFamily: 'Arial, sans-serif',
-        border: '1px solid #ddd',
-        borderRadius: '8px',
-        backgroundColor: '#f9f9f9',
+        padding: '30px',
+        fontFamily: 'Orbitron, sans-serif', // Futuristic font
+        textAlign: 'center',
+        border: '2px solid #ff4d4d', // Neon red border
+        borderRadius: '15px',
+        backgroundColor: '#1a1a1a', // Dark background for contrast
+        boxShadow: '0 8px 15px rgba(255, 0, 0, 0.3)', // Glowing neon red effect
+        transition: 'all 0.3s ease', // Smooth transition for hover effects
     },
+
+    // Header Styles (Red Neon Glow)
+    header: {
+        color: '#ff4d4d', // Neon red text for header
+        fontSize: '32px', // Larger font size for visibility
+        fontWeight: '700',
+        marginBottom: '20px',
+        textShadow: '0 0 15px rgba(255, 77, 77, 0.8)', // Glowing text-shadow effect
+    },
+
+    // Form Styles
     form: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '10px',
+        gap: '15px', // Increase space between form elements
     },
+
+    // Input Group Styles
     inputGroup: {
         display: 'flex',
         flexDirection: 'column',
     },
+
+    // Input Field Styles
     input: {
-        padding: '10px',
+        padding: '12px',
         fontSize: '16px',
-        border: '1px solid #ccc',
-        borderRadius: '5px',
-    },
-    button: {
-        padding: '10px',
-        fontSize: '16px',
+        border: '2px solid #ff4d4d', // Neon red border for inputs
+        borderRadius: '8px', // Rounded input fields
+        backgroundColor: '#2a2a2a', // Dark input field background
         color: '#fff',
-        backgroundColor: '#007BFF',
+        outline: 'none',
+        transition: 'border-color 0.3s, box-shadow 0.3s ease',
+    },
+
+    // Input Focus Effect (Neon Red Glow)
+    inputFocus: {
+        borderColor: '#ff4d4d', // Red border when focused
+        boxShadow: '0 0 8px rgba(255, 77, 77, 0.8)', // Glowing effect on focus
+    },
+
+    // Button Styles (Futuristic Red Gradient)
+    button: {
+        padding: '12px',
+        fontSize: '18px',
+        color: '#fff',
+        backgroundColor: 'linear-gradient(90deg, #ff4d4d, #ff0033)', // Red gradient background for the button
         border: 'none',
-        borderRadius: '5px',
+        borderRadius: '8px', // Rounded corners for the button
         cursor: 'pointer',
+        transition: 'transform 0.3s, box-shadow 0.3s ease',
     },
+
+    // Button Hover Effect (Glow and Scaling)
+    buttonHover: {
+        transform: 'scale(1.05)', // Slight zoom-in effect on hover
+        boxShadow: '0 0 15px rgba(255, 0, 0, 0.7)', // Glowing effect around button
+    },
+
+    // Error Message Styles (Neon Red Glow)
     error: {
-        marginTop: '10px',
-        color: 'red',
+        marginTop: '15px',
+        color: '#ff6666', // Lighter neon red for error messages
         fontSize: '14px',
+        textShadow: '0 0 10px rgba(255, 102, 102, 0.8)', // Glow effect for error message
     },
+
+    // Disabled Button Style (Dimmed Appearance)
+    buttonDisabled: {
+        backgroundColor: '#444',
+        color: '#999',
+        cursor: 'not-allowed',
+    }
 };
 
 export default Register;

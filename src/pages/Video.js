@@ -15,30 +15,80 @@ function Video({ videoSrc }) {
 }
 
 const styles = {
+    // Container Styles (Red Gaming Theme)
     container: {
-        textAlign: 'center',
-        padding: '20px',
-        backgroundColor: '#f0f0f0',
-        borderRadius: '8px',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+      textAlign: 'center',
+      padding: '10px',
+      backgroundColor: '#1a1a1a', // Dark background to make neon colors pop
+      borderRadius: '15px', // Rounded corners for a modern feel
+      boxShadow: '0 0 0 rgba(255, 0, 0, 0.3)', // Neon red glow effect
+      transition: 'all 0.3s ease', // Smooth transition for hover effects
+      overflow: 'hidden', // To ensure content stays within rounded corners
     },
+  
+    // Heading Styles (Red Neon Glow)
     heading: {
-        fontSize: '24px',
-        marginBottom: '20px',
-        color: '#333',
+      fontSize: '36px', // Larger text for visibility
+      marginBottom: '25px',
+      color: '#ff4d4d', // Neon red for heading
+      fontWeight: '600',
+      textShadow: '0 0 15px rgba(255, 77, 77, 0.8)', // Glowing red effect
+      letterSpacing: '1px', // Slight letter-spacing for a clean look
+      transition: 'color 0.3s, text-shadow 0.3s', // Smooth transition on hover
     },
+  
+    // Video Styles (Modern and sleek)
     video: {
-        width: '100%',
-        maxWidth: '600px',
-        margin: 'auto',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+      width: '100%',
+      maxWidth: '720px', // Slightly larger video container for better viewing
+      margin: '20px auto',
+      borderRadius: '12px', // Rounded corners for a sleek look
+      boxShadow: '0 4px 10px rgba(255, 0, 0, 0.5)', // Glowing red effect around the video
+      transition: 'transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease',
     },
+  
+    // Error Message Styles (Neon Red glow)
     errorMessage: {
-        marginTop: '10px',
-        fontSize: '14px',
-        color: '#888',
+      marginTop: '15px',
+      fontSize: '16px',
+      color: '#ff6666', // Lighter neon red for error messages
+      textShadow: '0 0 10px rgba(255, 102, 102, 0.8)', // Glow effect for error message
+      letterSpacing: '0.5px', // Subtle letter-spacing for readability
+      transition: 'color 0.3s, text-shadow 0.3s', // Smooth transition for glow effect
+    },
+  
+    // Hover effect for container (Pulse effect in red)
+    containerHover: {
+      '&:hover': {
+        boxShadow: '0 100px 20px rgba(255, 0, 0, 1)', // Stronger red glow on hover
+        transform: 'scale(1.05)', // Slight zoom-in effect for a modern touch
+      }
+    },
+  
+    // Video Hover Effect (Glowing and smooth scaling)
+    videoHover: {
+      '&:hover': {
+        transform: 'scale(1.1)', // Slight zoom-in effect on hover
+        boxShadow: '260 250 250px rgba(255, 0, 92, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.8)', // Stronger glowing effect
+        filter: 'brightness(1.2)', // Adds brightness effect when hovering
+      }
+    },
+  
+    // Additional Hover Effects for Heading, Error Message, and Video (Neon Glow Enhancement)
+    headingHover: {
+      '&:hover': {
+        color: '#ff005c', // Neon pink on hover for heading
+        textShadow: '0 0 30px rgba(255, 0, 92, 1)', // Stronger glow on hover
+      }
+    },
+  
+    errorMessageHover: {
+      '&:hover': {
+        color: '#ff4d4d', // Darker neon red when hovered
+        textShadow: '0 0 15px rgba(255, 77, 77, 0.8)', // Enhanced glow effect
+      }
     },
 };
+
 
 export default Video;

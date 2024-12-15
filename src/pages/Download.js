@@ -143,24 +143,160 @@ const Download = () => {
   };
 
   return (
-    <div>
-      <h2>Download Files</h2>
-      <button onClick={fetchFiles} disabled={loading}>
-        {loading ? "Loading..." : "Fetch Files"}
-      </button>
-      <ul>
-        {files.map((file, index) => (
-          <li key={index}>
-            <span>{file.name}</span>
-            <button onClick={() => handleDownload(file.url, file.name)}>
-              Download
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <style>
+        {`
+/* Centering Content in the Container */
+.container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 20px auto;
+  background: rgba(15, 15, 15, 0.95); /* Dark background */
+  border-radius: 15px;
+  border: 2px solid rgba(255, 0, 0, 0.4); /* Soft neon red border */
+  box-shadow: 0 4px 20px rgba(255, 0, 0, 0.8); /* Stronger red glow */
+  font-family: 'Orbitron', sans-serif; /* Gaming font */
+  color: #fff;
+  text-align: center; /* Center text */
+}
+
+/* Header Styling */
+.container h2 {
+  text-align: center;
+  color: #ff1e1e; /* Neon red */
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 4px 15px rgba(255, 30, 30, 1); /* Strong neon glow */
+}
+
+/* Button Styling */
+button {
+  display: inline-block;
+  background: linear-gradient(90deg, #ff0000, #990000); /* Red gradient */
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  margin: 0 auto;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.9); /* Neon red glow */
+}
+
+button:hover {
+  background: linear-gradient(90deg, #990000, #ff0000); /* Inverse red gradient */
+  box-shadow: 0 6px 18px rgba(255, 0, 0, 1); /* Stronger glow */
+  transform: translateY(-3px);
+}
+
+button:disabled {
+  background: rgba(100, 0, 0, 0.6);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Center Align Header and Button */
+.container h2,
+button {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* File List Styling */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(40, 10, 10, 0.9); /* Dark red */
+  margin: 0.5rem 0;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  box-shadow: inset 0 0 15px rgba(255, 0, 0, 0.4), 0 4px 15px rgba(255, 0, 0, 0.6); /* Inner and outer glowing */
+}
+
+li span {
+  font-size: 1rem;
+  color: #ff6666; /* Neon light red */
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* File Download Button */
+li button {
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #ff4d4d, #cc0000); /* Gradient red */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+li button:hover {
+  background: linear-gradient(90deg, #cc0000, #ff4d4d); /* Inverse gradient */
+  box-shadow: 0 4px 12px rgba(255, 77, 77, 1); /* Neon red glow */
+  transform: scale(1.05);
+}
+
+/* Error Message Styling */
+.error {
+  color: #ff3333; /* Bright neon red */
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-shadow: 0 2px 5px rgba(255, 51, 51, 0.9); /* Glowing effect */
+}
+
+/* Spinner Styling */
+.spinner {
+  text-align: center;
+  font-size: 2rem;
+  color: #ff6666; /* Light neon red */
+  animation: spin 1s linear infinite;
+  text-shadow: 0 2px 5px rgba(255, 102, 102, 1); /* Glowing effect */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+       `}
+      </style>
+      <div>
+        <h2>Download Files</h2>
+        <button onClick={fetchFiles} disabled={loading}>
+          {loading ? "Loading..." : "Fetch Files"}
+        </button>
+        <ul>
+          {files.map((file, index) => (
+            <li key={index}>
+              <span>{file.name}</span>
+              <button onClick={() => handleDownload(file.url, file.name)}>
+                Download
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 };
-
 
 export default Download;
