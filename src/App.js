@@ -88,7 +88,7 @@ function App() {
           <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '30px', marginTop: '20px' }}>
             <div style={{ textAlign: 'center', width: '200px' }}>
               <img
-                src="/images/member1.jpg"
+                src="/pictures/member1.jpg"
                 alt="Aw Boon Fong"
                 style={{ width: '150px', height: '150px', borderRadius: '50%' }}
               />
@@ -97,7 +97,7 @@ function App() {
             </div>
             <div style={{ textAlign: 'center', width: '200px' }}>
               <img
-                src="/images/member2.jpg"
+                src="/pictures/member2.jpg"
                 alt="Ephraim Chang Enlin"
                 style={{ width: '150px', height: '150px', borderRadius: '50%' }}
               />
@@ -106,7 +106,7 @@ function App() {
             </div>
             <div style={{ textAlign: 'center', width: '200px' }}>
               <img
-                src="/images/member3.jpg"
+                src="/pictures/member3.jpg"
                 alt="Muhammad Faiz Bin Johari"
                 style={{ width: '150px', height: '150px', borderRadius: '50%' }}
               />
@@ -115,7 +115,7 @@ function App() {
             </div>
             <div style={{ textAlign: 'center', width: '200px' }}>
               <img
-                src="/images/member4.jpg"
+                src="/pictures/member4.jpg"
                 alt="Tan Jun Han, Jasper"
                 style={{ width: '150px', height: '150px', borderRadius: '50%' }}
               />
@@ -124,7 +124,7 @@ function App() {
             </div>
             <div style={{ textAlign: 'center', width: '200px' }}>
               <img
-                src="/images/member5.jpg"
+                src="/pictures/member5.jpg"
                 alt="Simiyon Raju Aroharrison"
                 style={{ width: '150px', height: '150px', borderRadius: '50%' }}
               />
@@ -133,7 +133,7 @@ function App() {
             </div>
             <div style={{ textAlign: 'center', width: '200px' }}>
               <img
-                src="/images/member6.jpg"
+                src="/pictures/member6.jpg"
                 alt="Aung Kyaw Saw"
                 style={{ width: '150px', height: '150px', borderRadius: '50%' }}
               />
