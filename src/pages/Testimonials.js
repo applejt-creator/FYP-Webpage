@@ -1,5 +1,6 @@
 // src/pages/Testimonials.js
-import React from 'react';
+import React, { useState } from 'react';
+import { Button, TextField, Box } from '@mui/material';
 
 const testimonials = [
     { name: "Alice", message: "Great product!" },
@@ -16,19 +17,69 @@ function TestimonialCard({ name, message }) {
 }
 
 function Testimonials() {
+    const [testimonial, setTestimonial] = useState({ name: '', message: '', rating: '' });
+    const [allTestimonials, setAllTestimonials] = useState(testimonials);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setTestimonial({ ...testimonial, [name]: value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (testimonial.name && testimonial.message && testimonial.rating) {
+            setAllTestimonials([...allTestimonials, testimonial]);
+            setTestimonial({ name: '', message: '', rating: '' });
+        }
+    };
+
     return (
         <div style={styles.container}>
             <h2 style={styles.heading}>Testimonials</h2>
+            <form onSubmit={handleSubmit} style={styles.form}>
+                <TextField
+                    label="Name"
+                    variant="outlined"
+                    fullWidth
+                    name="name"
+                    value={testimonial.name}
+                    onChange={handleInputChange}
+                    style={{ ...styles.textField, backgroundColor: '#2b2b2b' }} // Lighten text field background
+                />
+                <TextField
+                    label="Testimonial"
+                    variant="outlined"
+                    fullWidth
+                    name="message"
+                    multiline
+                    rows={4}
+                    value={testimonial.message}
+                    onChange={handleInputChange}
+                    style={{ ...styles.textField, backgroundColor: '#2b2b2b' }} // Lighten text field background
+                />
+                <TextField
+                    label="Rating"
+                    variant="outlined"
+                    fullWidth
+                    type="number"
+                    name="rating"
+                    value={testimonial.rating}
+                    onChange={handleInputChange}
+                    style={{ ...styles.textField, backgroundColor: '#2b2b2b' }} // Lighten text field background
+                />
+                <Button type="submit" variant="contained" style={styles.button}>
+                    Submit
+                </Button>
+            </form>
             <ul style={styles.list}>
-                {testimonials.map((testimonial, index) => (
-                    <TestimonialCard 
-                        key={index} 
-                        name={testimonial.name} 
-                        message={testimonial.message} 
+                {allTestimonials.map((testimonial, index) => (
+                    <TestimonialCard
+                        key={index}
+                        name={testimonial.name}
+                        message={testimonial.message}
                     />
                 ))}
             </ul>
-            {/* Future enhancement: Fetch testimonials from an API */}
         </div>
     );
 }
@@ -38,21 +89,21 @@ const styles = {
         padding: '190px',
         maxWidth: '1000px',
         margin: 'auto',
-        fontFamily: 'Orbitron, sans-serif', // Futuristic font for the gaming theme
-        background: 'radial-gradient(circle, #0a0a0a 50%, #1b1b1b 100%)', // Darker glowing background
-        color: '#fff', // White text
+        fontFamily: 'Orbitron, sans-serif',
+        background: 'radial-gradient(circle, #0a0a0a 50%, #1b1b1b 100%)',
+        color: '#fff',
         borderRadius: '20px',
-        boxShadow: '0 0 20px rgba(255, 0, 102, 0.8)', // Glowing shadow effect
+        boxShadow: '0 0 20px rgba(255, 0, 102, 0.8)',
         overflow: 'hidden',
-        animation: 'fadeIn 1.2s ease-out', // Adding fade-in animation to container
+        animation: 'fadeIn 1.2s ease-out',
     },
     heading: {
         textAlign: 'center',
         marginBottom: '25px',
-        fontSize: '36px', // Larger heading for emphasis
-        color: '#ff005c', // Neon pink color
+        fontSize: '36px',
+        color: '#ff005c',
         textTransform: 'uppercase',
-        textShadow: '0 0 20px #ff005c, 0 0 30px rgba(255, 0, 92, 0.8)', // Glowing text effect
+        textShadow: '0 0 20px #ff005c, 0 0 30px rgba(255, 0, 92, 0.8)',
         letterSpacing: '10px',
         animation: 'slideIn 1s ease-out',
     },
@@ -63,40 +114,20 @@ const styles = {
     },
     card: {
         marginBottom: '20px',
-        border: '2px solid rgba(255, 0, 102, 0.5)', // Neon pink border
+        border: '2px solid rgba(255, 0, 102, 0.5)',
         padding: '20px',
         borderRadius: '12px',
-        backgroundColor: '#202020', // Dark background for each card
-        boxShadow: '0 0 30px rgba(255, 0, 102, 0.6)', // Glowing effect around each card
+        backgroundColor: '#202020',
+        boxShadow: '0 0 30px rgba(255, 0, 102, 0.6)',
         transition: 'transform 0.3s, box-shadow 0.3s, background-color 0.3s',
         cursor: 'pointer',
     },
-    name: {
-        color: '#1e90ff', // Neon blue color for names
-        fontWeight: 'bold',
-        fontSize: '1.3rem',
-        letterSpacing: '1px',
-    },
-    text: {
-        color: '#f1f1f1', // Light gray for text
-        fontSize: '1.1rem',
-        lineHeight: '1.6',
-        marginTop: '60px',
-    },
-    cardHover: {
-        transform: 'scale(1.05)',
-        boxShadow: '0 0 40px rgba(255, 0, 102, 0.8)', // Enhanced glowing on hover
-        backgroundColor: '#2b2b2b', // Darker background on hover
-    },
-    cardContent: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
+    textField: {
+        marginBottom: '15px',
+        backgroundColor: '#2b2b2b', // Lighter background for text fields
     },
     button: {
-        background: 'linear-gradient(90deg, #ff4d4d, #ff005c)', // Button gradient
+        background: 'linear-gradient(90deg, #ff4d4d, #ff005c)',
         padding: '12px 24px',
         border: 'none',
         borderRadius: '8px',
@@ -106,10 +137,6 @@ const styles = {
         marginTop: '15px',
         transition: 'transform 0.3s, box-shadow 0.3s',
         boxShadow: '0 0 15px rgba(255, 0, 102, 0.5)',
-    },
-    buttonHover: {
-        transform: 'translateY(-2px)',
-        boxShadow: '0 6px 20px rgba(255, 0, 102, 0.7)', // Enhanced glow effect on button hover
     },
 };
 

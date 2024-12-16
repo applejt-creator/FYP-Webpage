@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './App.css';  
-//src/App.js
+import './App.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
@@ -83,6 +82,13 @@ function App() {
             Gaming with Barehands is a cutting-edge project that leverages machine learning and
             computer vision to recognize hand gestures and provide an immersive gaming experience.
             Our goal is to redefine how users interact with games by eliminating the need for traditional controllers.
+            <br />
+            Join us in creating a world where hand gestures are no longer just a game mechanic, but a powerful tool for expressing emotions and interacting with others.
+            <br />
+            <br />
+            <a href="https://github.com/applejt-creator/FYP-Webpage.git" className="github-link">GitHub website Repository</a>
+            <a href="https://github.com/AksAlexTyd/FYP-HandGestureRecognition.git" className="github-link">GitHub Gesture Motion Repository</a>
+            <a href="https://github.com/P4ndemonium/FYP_Game.git" className="github-link">GitHub Unity Game Repository</a>
           </p>
           <h2 style={{ marginTop: '40px' }}>Meet the Team</h2>
           <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '30px', marginTop: '20px' }}>
@@ -147,24 +153,21 @@ function App() {
       ),
     },
     { path: '/login', element: user ? <Navigate to="/" /> : <Login setUser={setUser} /> },
-    { path: '/register', element: <Register /> },
-    { path: '/video', element: <Video videoSrc="/videos/path-to-your-video.mp4" /> },
-    { path: '/testimonials', element: <Testimonials /> },
-    { path: '/download', element: <Download /> },
+    { path: '/register', element: user ? <Navigate to="/" /> : <Register setUser={setUser} /> },
     { path: '/upload', element: user ? <Upload /> : <Navigate to="/login" /> },
-    {
-      path: '/admin',
-      element: user && user.role === 'admin' ? <Admin /> : <Navigate to="/" />,
-    },
-    { path: '*', element: <h1>404: Page Not Found</h1> },
+    { path: '/video', element: user ? <Video /> : <Navigate to="/login" /> },
+    { path: '/testimonials', element: user ? <Testimonials /> : <Navigate to="/login" /> },
+    { path: '/download', element: user ? <Download /> : <Navigate to="/login" /> },
+    { path: '/admin', element: user && user.role === 'admin' ? <Admin /> : <Navigate to="/" /> },
+    { path: '*', element: <Navigate to="/" /> },
   ];
 
   return (
     <Router>
-      <Navbar user={user} onLogout={handleLogout} />
+      <Navbar user={user} handleLogout={handleLogout} />
       <Routes>
-        {routes.map((route, index) => (
-          <Route key={index} path={route.path} element={route.element} />
+        {routes.map(({ path, element }) => (
+          <Route key={path} path={path} element={element} />
         ))}
       </Routes>
     </Router>

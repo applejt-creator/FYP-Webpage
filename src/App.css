@@ -169,3 +169,15 @@ form button:hover {
   color: #ff6666;
   text-shadow: 0 3px 6px rgba(255, 102, 102, 0.8);
 }
+
+/* Adjustments for Testimonials Text Input */
+input[name="rating"] {
+  background: #2a2a2a; /* Slightly lighter gray for better readability */
+  color: #fff;
+  box-shadow: 0 2px 5px rgba(255, 0, 0, 0.5) inset;
+}
+
+input[name="rating"]:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
+}
