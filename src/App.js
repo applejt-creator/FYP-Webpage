@@ -74,7 +74,78 @@ function App() {
 
   // Define routes dynamically
   const routes = [
-    { path: '/', element: <h1>Welcome to the Project Website</h1> },
+    {
+      path: '/',
+      element: (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <h1>Welcome to Gaming with Barehands</h1>
+          <p style={{ marginTop: '20px', fontSize: '18px', lineHeight: '1.5' }}>
+            Gaming with Barehands is a cutting-edge project that leverages machine learning and
+            computer vision to recognize hand gestures and provide an immersive gaming experience.
+            Our goal is to redefine how users interact with games by eliminating the need for traditional controllers.
+          </p>
+          <h2 style={{ marginTop: '40px' }}>Meet the Team</h2>
+          <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '30px', marginTop: '20px' }}>
+            <div style={{ textAlign: 'center', width: '200px' }}>
+              <img
+                src="/images/member1.jpg"
+                alt="Aw Boon Fong"
+                style={{ width: '150px', height: '150px', borderRadius: '50%' }}
+              />
+              <h3>Aw Boon Fong</h3>
+              <p>Developer for project website backend</p>
+            </div>
+            <div style={{ textAlign: 'center', width: '200px' }}>
+              <img
+                src="/images/member2.jpg"
+                alt="Ephraim Chang Enlin"
+                style={{ width: '150px', height: '150px', borderRadius: '50%' }}
+              />
+              <h3>Ephraim Chang Enlin</h3>
+              <p>Documentation</p>
+            </div>
+            <div style={{ textAlign: 'center', width: '200px' }}>
+              <img
+                src="/images/member3.jpg"
+                alt="Muhammad Faiz Bin Johari"
+                style={{ width: '150px', height: '150px', borderRadius: '50%' }}
+              />
+              <h3>Muhammad Faiz Bin Johari</h3>
+              <p>Developer for input system and game</p>
+            </div>
+            <div style={{ textAlign: 'center', width: '200px' }}>
+              <img
+                src="/images/member4.jpg"
+                alt="Tan Jun Han, Jasper"
+                style={{ width: '150px', height: '150px', borderRadius: '50%' }}
+              />
+              <h3>Tan Jun Han, Jasper</h3>
+              <p>Developer for project website frontend, partial backend, and project game</p>
+            </div>
+            <div style={{ textAlign: 'center', width: '200px' }}>
+              <img
+                src="/images/member5.jpg"
+                alt="Simiyon Raju Aroharrison"
+                style={{ width: '150px', height: '150px', borderRadius: '50%' }}
+              />
+              <h3>Simiyon Raju Aroharrison</h3>
+              <p>Developer for project website frontend, partial backend, and project game</p>
+            </div>
+            <div style={{ textAlign: 'center', width: '200px' }}>
+              <img
+                src="/images/member6.jpg"
+                alt="Aung Kyaw Saw"
+                style={{ width: '150px', height: '150px', borderRadius: '50%' }}
+              />
+              <h3>Aung Kyaw Saw</h3>
+              <p>Developer for Gesture Motion</p>
+            </div>
+            <div style={{ textAlign: 'center', width: '200px' }}>
+            </div>
+          </div>
+        </div>
+      ),
+    },
     { path: '/login', element: user ? <Navigate to="/" /> : <Login setUser={setUser} /> },
     { path: '/register', element: <Register /> },
     { path: '/video', element: <Video videoSrc="/videos/path-to-your-video.mp4" /> },
