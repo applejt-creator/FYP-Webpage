@@ -1,24 +1,30 @@
 // src/pages/Testimonials.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, TextField, Box } from '@mui/material';
 
-const testimonials = [
-    { name: "Alice", message: "Great product!" },
-    { name: "Bob", message: "Really helped me in my project." },
-    { name: "Charlie", message: "Excellent support and functionality!" },
+const initialTestimonials = JSON.parse(localStorage.getItem('testimonials')) || [
+    { name: "Alice", message: "Great product!", rating: 5 },
+    { name: "Bob", message: "Really helped me in my project.", rating: 4 },
+    { name: "Charlie", message: "Excellent support and functionality!", rating: 5 },
 ];
 
-function TestimonialCard({ name, message }) {
+function TestimonialCard({ name, message, rating }) {
     return (
         <li style={styles.card}>
-            <strong>{name}</strong>: {message}
+            <strong>{name}</strong>: {message} - Rating: {rating}/5
         </li>
     );
 }
 
 function Testimonials() {
     const [testimonial, setTestimonial] = useState({ name: '', message: '', rating: '' });
-    const [allTestimonials, setAllTestimonials] = useState(testimonials);
+    const [allTestimonials, setAllTestimonials] = useState(initialTestimonials);
+    const [error, setError] = useState({});
+
+    useEffect(() => {
+        const storedTestimonials = JSON.parse(localStorage.getItem('testimonials')) || [];
+        setAllTestimonials(storedTestimonials);
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -27,9 +33,31 @@ function Testimonials() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (testimonial.name && testimonial.message && testimonial.rating) {
-            setAllTestimonials([...allTestimonials, testimonial]);
+        const errors = {};
+
+        // Validate name
+        if (!testimonial.name) {
+            errors.name = 'Name is required';
+        }
+
+        // Validate message
+        if (!testimonial.message) {
+            errors.message = 'Message is required';
+        }
+
+        // Validate rating (should be between 1 and 5)
+        if (!testimonial.rating || testimonial.rating < 1 || testimonial.rating > 5) {
+            errors.rating = 'Rating must be between 1 and 5';
+        }
+
+        if (Object.keys(errors).length === 0) {
+            const newTestimonials = [...allTestimonials, testimonial];
+            setAllTestimonials(newTestimonials);
+            localStorage.setItem('testimonials', JSON.stringify(newTestimonials));
             setTestimonial({ name: '', message: '', rating: '' });
+            setError({});
+        } else {
+            setError(errors);
         }
     };
 
@@ -44,8 +72,10 @@ function Testimonials() {
                     name="name"
                     value={testimonial.name}
                     onChange={handleInputChange}
-                    style={{ ...styles.textField, backgroundColor: '#2b2b2b' }} // Lighten text field background
+                    style={{ ...styles.textField, backgroundColor: '#2b2b2b' }}
                 />
+                {error.name && <p style={styles.error}>{error.name}</p>}
+
                 <TextField
                     label="Testimonial"
                     variant="outlined"
@@ -55,8 +85,10 @@ function Testimonials() {
                     rows={4}
                     value={testimonial.message}
                     onChange={handleInputChange}
-                    style={{ ...styles.textField, backgroundColor: '#2b2b2b' }} // Lighten text field background
+                    style={{ ...styles.textField, backgroundColor: '#2b2b2b' }}
                 />
+                {error.message && <p style={styles.error}>{error.message}</p>}
+
                 <TextField
                     label="Rating"
                     variant="outlined"
@@ -65,8 +97,11 @@ function Testimonials() {
                     name="rating"
                     value={testimonial.rating}
                     onChange={handleInputChange}
-                    style={{ ...styles.textField, backgroundColor: '#2b2b2b' }} // Lighten text field background
+                    inputProps={{ min: 1, max: 5 }}
+                    style={{ ...styles.textField, backgroundColor: '#2b2b2b' }}
                 />
+                {error.rating && <p style={styles.error}>{error.rating}</p>}
+
                 <Button type="submit" variant="contained" style={styles.button}>
                     Submit
                 </Button>
@@ -75,8 +110,9 @@ function Testimonials() {
                 {allTestimonials.map((testimonial, index) => (
                     <TestimonialCard
                         key={index}
-                        name={testimonial.name}
+                        name={testimonial.name || "Anonymous"}
                         message={testimonial.message}
+                        rating={testimonial.rating}
                     />
                 ))}
             </ul>
@@ -124,7 +160,7 @@ const styles = {
     },
     textField: {
         marginBottom: '15px',
-        backgroundColor: '#2b2b2b', // Lighter background for text fields
+        backgroundColor: '#2b2b2b',
     },
     button: {
         background: 'linear-gradient(90deg, #ff4d4d, #ff005c)',
@@ -138,6 +174,12 @@ const styles = {
         transition: 'transform 0.3s, box-shadow 0.3s',
         boxShadow: '0 0 15px rgba(255, 0, 102, 0.5)',
     },
+    error: {
+        color: 'red',
+        fontSize: '0.875rem',
+        marginBottom: '5px',
+    },
 };
 
 export default Testimonials;
+

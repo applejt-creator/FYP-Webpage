@@ -146,8 +146,6 @@ function App() {
               <h3>Aung Kyaw Saw</h3>
               <p>Developer for Gesture Motion</p>
             </div>
-            <div style={{ textAlign: 'center', width: '200px' }}>
-            </div>
           </div>
         </div>
       ),
@@ -155,8 +153,8 @@ function App() {
     { path: '/login', element: user ? <Navigate to="/" /> : <Login setUser={setUser} /> },
     { path: '/register', element: user ? <Navigate to="/" /> : <Register setUser={setUser} /> },
     { path: '/upload', element: user ? <Upload /> : <Navigate to="/login" /> },
-    { path: '/video', element: user ? <Video /> : <Navigate to="/login" /> },
-    { path: '/testimonials', element: user ? <Testimonials /> : <Navigate to="/login" /> },
+    { path: '/video', element: <Video /> }, // Accessible to all users
+    { path: '/testimonials', element: <Testimonials /> }, // Accessible to all users
     { path: '/download', element: user ? <Download /> : <Navigate to="/login" /> },
     { path: '/admin', element: user && user.role === 'admin' ? <Admin /> : <Navigate to="/" /> },
     { path: '*', element: <Navigate to="/" /> },
