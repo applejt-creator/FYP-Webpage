@@ -1,5 +1,6 @@
 // src/components/Navbar.js
 import React from 'react';
+import './Navbar.css';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, signOut } from 'firebase/auth';
@@ -19,9 +20,9 @@ function Navbar({ user, onLogout }) {
     };
 
     return (
-        <AppBar position="static">
+        <AppBar position="static" className="gaming-navbar">
             <Toolbar>
-                <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                <Typography variant="h6" sx={{ flexGrow: 1 }} className="gaming-welcome">
                     <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
                         Home
                     </Link>
@@ -61,7 +62,7 @@ function Navbar({ user, onLogout }) {
                         <Button color="inherit" onClick={handleLogout}>
                             Logout
                         </Button>
-                        <Typography variant="h6" sx={{ marginLeft: 2 }}>
+                        <Typography variant="h6" sx={{ marginLeft: 2 }} className="gaming-welcome">
                             Welcome, {user.name || user.email}
                         </Typography>
                     </>
@@ -78,6 +79,7 @@ function Navbar({ user, onLogout }) {
             </Toolbar>
         </AppBar>
     );
+
 }
 
 export default Navbar;
