@@ -174,7 +174,7 @@ function App() {
                 style={{ width: '150px', height: '150px', borderRadius: '50%' }}
               />
               <h3>Tan Jun Han, Jasper</h3>
-              <p>Frontend & Game Designer</p>
+              <p>Developer for project website frontend, and game design</p>
             </div>
             <div style={{ textAlign: 'center', width: '200px' }}>
               <img
