@@ -37,6 +37,13 @@ function Navbar({ user, onLogout }) {
 
                 {/* Conditional rendering for "Download" button */}
                 {(user && (user.role === 'admin' || user.role === 'client' || user.role === 'player')) && (
+                    <Button color="inherit" component={Link} to="/reports">
+                        Reports
+                    </Button>
+                )}
+
+                {/* Conditional rendering for "Download" button */}
+                {(user && (user.role === 'admin' || user.role === 'client' || user.role === 'player')) && (
                     <Button color="inherit" component={Link} to="/download">
                         Download
                     </Button>

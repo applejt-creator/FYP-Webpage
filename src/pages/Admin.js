@@ -1,4 +1,3 @@
-// src/pages/Admin.js
 import React, { useEffect, useState } from 'react';
 import { auth, db } from '../firebase'; // Ensure Firebase is initialized properly
 import { collection, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
@@ -29,29 +28,6 @@ function AdminPage() {
 
         fetchUsers();
     }, []);
-
-    // Handle suspending or unsuspending a user
-    const handleSuspendToggle = async (userId, email, isSuspended) => {
-        setLoadingAction(true);
-        try {
-            const userDoc = doc(db, 'users', userId);
-            await updateDoc(userDoc, { isSuspended: !isSuspended });
-
-            const firebaseUser = await auth.getUserByEmail(email);
-            await auth.updateUser(firebaseUser.uid, { disabled: !isSuspended });
-
-            setUsers((prevUsers) =>
-                prevUsers.map((user) => (user.id === userId ? { ...user, isSuspended: !isSuspended } : user))
-            );
-
-            alert(isSuspended ? 'User unsuspended successfully!' : 'User suspended successfully!');
-        } catch (error) {
-            console.error('Error toggling suspension status:', error);
-            setError('Failed to update user suspension status.');
-        } finally {
-            setLoadingAction(false);
-        }
-    };
 
     // Handle deleting a user
     const handleDelete = async (userId, email) => {
@@ -94,24 +70,19 @@ function AdminPage() {
     if (loading) return <p>Loading users...</p>;
 
     return (
-        <div>
-            <h1>Admin Dashboard</h1>
+        <div style={styles.container}>
+            <h1 style={styles.heading}>Admin Dashboard</h1>
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <ul>
+            <ul style={styles.list}>
                 {users.map((user) => (
-                    <li key={user.id} style={{ marginBottom: '20px', padding: '10px', border: '1px solid #ddd', borderRadius: '5px' }}>
+                    <li key={user.id} style={styles.card}>
                         <p>
                             <strong>Name:</strong> {user.name} <br />
                             <strong>Email:</strong> {user.email} <br />
-                            <strong>Status:</strong> {user.isSuspended ? 'Suspended' : 'Active'}
+                            <strong>Company:</strong> {user.company} <br />
+                            <strong>Phone:</strong> {user.phone} <br />
+                            <strong>Role:</strong> {user.role}
                         </p>
-                        <button
-                            onClick={() => handleSuspendToggle(user.id, user.email, user.isSuspended)}
-                            disabled={loadingAction}
-                            style={styles.actionButton}
-                        >
-                            {loadingAction ? 'Processing...' : user.isSuspended ? 'Unsuspend' : 'Suspend'}
-                        </button>
                         <button
                             onClick={() => handleDelete(user.id, user.email)}
                             disabled={loadingAction}
@@ -154,21 +125,21 @@ const styles = {
         boxShadow: '0 0 30px rgba(255, 0, 102, 0.6)', // Neon pink glowing shadow effect
         overflow: 'hidden',
         textAlign: 'center', // Center all content for a polished look
-      },
-      heading: {
+    },
+    heading: {
         textAlign: 'center',
         marginBottom: '20px',
         fontSize: '30px', // Slightly larger heading
         color: '#ff005c', // Neon pink for a striking heading
         textTransform: 'uppercase',
         textShadow: '0 0 15px #ff005c, 0 0 30px rgba(255, 0, 92, 0.5)', // Glowing text effect
-      },
-      list: {
+    },
+    list: {
         listStyleType: 'none',
         padding: 0,
         margin: 0,
-      },
-      card: {
+    },
+    card: {
         marginBottom: '15px',
         border: '2px solid rgba(255, 0, 102, 0.4)', // Neon pink border
         padding: '15px',
@@ -177,12 +148,8 @@ const styles = {
         boxShadow: '0 0 20px rgba(255, 0, 102, 0.6)', // Neon glow around each card
         transition: 'transform 0.3s ease, box-shadow 0.3s ease', // Smooth animations
         textAlign: 'left', // Left-align card content
-      },
-      cardHover: {
-        transform: 'scale(1.05)', // Subtle zoom effect on hover
-        boxShadow: '0 0 30px rgba(255, 0, 102, 0.9)', // Brighter glow on hover
-      },
-      actionButton: {
+    },
+    actionButton: {
         margin: '5px',
         padding: '8px 15px', // Slightly larger padding for better usability
         backgroundColor: '#ff005c', // Neon pink button background
@@ -195,24 +162,24 @@ const styles = {
         fontSize: '14px',
         boxShadow: '0 0 10px rgba(255, 0, 92, 0.5)', // Glowing button effect
         transition: 'background-color 0.3s ease, transform 0.3s ease',
-      },
-      actionButtonHover: {
+    },
+    actionButtonHover: {
         backgroundColor: '#ff1e1e', // Transition to bright red on hover
         transform: 'scale(1.1)', // Slightly zoom in
         boxShadow: '0 0 15px rgba(255, 30, 30, 0.7)', // Bright glow on hover
-      },
-      actionButtonDisabled: {
+    },
+    actionButtonDisabled: {
         backgroundColor: '#333', // Muted dark gray for disabled state
         cursor: 'not-allowed',
         boxShadow: 'none', // No glow for disabled buttons
-      },
-      resetPasswordForm: {
+    },
+    resetPasswordForm: {
         marginTop: '10px',
         padding: '15px',
         background: 'linear-gradient(135deg, #1a1a1a, #0f0f10)', // Subtle gradient for the form background
         borderRadius: '8px',
         boxShadow: '0 0 20px rgba(255, 0, 102, 0.5)', // Glowing form effect
-      },
+    },
 };
 
 export default AdminPage;

@@ -10,6 +10,7 @@ import Register from './pages/Register';
 import Upload from './pages/Upload';
 import Video from './pages/Video';
 import Testimonials from './pages/Testimonials';
+import Reports from './pages/Reports';
 import Download from './pages/Download';
 import Admin from './pages/Admin';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -213,6 +214,7 @@ function App() {
     { path: '/upload', element: user ? <Upload /> : <Navigate to="/login" /> },
     { path: '/video', element: <Video /> }, // Accessible to all users
     { path: '/testimonials', element: <Testimonials /> }, // Accessible to all users
+    { path: '/reports', element: <Reports /> }, 
     { path: '/download', element: user ? <Download /> : <Navigate to="/login" /> },
     { path: '/admin', element: user && user.role === 'admin' ? <Admin /> : <Navigate to="/" /> },
     { path: '*', element: <Navigate to="/" /> },
