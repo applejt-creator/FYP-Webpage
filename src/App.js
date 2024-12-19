@@ -183,7 +183,7 @@ function App() {
                 style={{ width: '150px', height: '150px', borderRadius: '50%' }}
               />
               <h3>Simiyon Raju Aroharrison</h3>
-              <p>CSS Specialist</p>
+              <p>Developer for website frontend style, assist documentation</p>
             </div>
             <div style={{ textAlign: 'center', width: '200px' }}>
               <img
