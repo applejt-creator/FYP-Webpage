@@ -1,106 +1,126 @@
 // src/pages/Reports.js
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, Box } from '@mui/material';
-import {
-    collection,
-    addDoc,
-  } from "firebase/firestore";
+import { Button, TextField, Box, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import { collection, addDoc } from "firebase/firestore";
 import { db } from '../firebase';
 
-const initialTestimonials = JSON.parse(localStorage.getItem('testimonials')) || [
-    { name: "Alice", message: "Great product!", rating: 5 },
-    { name: "Bob", message: "Really helped me in my project.", rating: 4 },
-    { name: "Charlie", message: "Excellent support and functionality!", rating: 5 },
-];
-
 function Reports() {
-    const [testimonial, setTestimonial] = useState({ name: '', message: '', rating: '' });
+    const [submission, setSubmission] = useState({
+        type: '',
+        name: '',
+        message: '',
+        rating: '',
+    });
     const [error, setError] = useState({});
-
-    useEffect(() => {
-        const storedTestimonials = JSON.parse(localStorage.getItem('testimonials')) || [];
-    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setTestimonial({ ...testimonial, [name]: value });
+        setSubmission({ ...submission, [name]: value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const errors = {};
 
+        // Validate type
+        if (!submission.type) {
+            errors.type = 'Submission type is required';
+        }
+
         // Validate name
-        if (!testimonial.name) {
+        if (!submission.name) {
             errors.name = 'Name is required';
         }
 
         // Validate message
-        if (!testimonial.message) {
+        if (!submission.message) {
             errors.message = 'Message is required';
         }
 
-        // Validate rating (should be between 1 and 5)
-        if (!testimonial.rating || testimonial.rating < 1 || testimonial.rating > 5) {
+        // Validate rating only if type is "Rating"
+        if (submission.type === 'Rating' && (!submission.rating || submission.rating < 1 || submission.rating > 5)) {
             errors.rating = 'Rating must be between 1 and 5';
         }
 
         if (Object.keys(errors).length === 0) {
-            const newTestimonials = JSON.parse(localStorage.getItem('testimonials')) || [];
-            newTestimonials.push(testimonial);
-            localStorage.setItem('testimonials', JSON.stringify(newTestimonials));
-            setTestimonial({ name: '', message: '', rating: '' });
-            setError({});
+            try {
+                const submissionsCollectionRef = collection(db, submission.type.toLowerCase()); // Save to collection based on type
+                await addDoc(submissionsCollectionRef, {
+                    name: submission.name,
+                    message: submission.message,
+                    rating: submission.rating || null, // Only include rating if applicable
+                    type: submission.type,
+                });
+                alert(`${submission.type} submitted successfully!`);
+                setSubmission({ type: '', name: '', message: '', rating: '' });
+                setError({});
+            } catch (error) {
+                console.error("Error adding submission: ", error);
+                alert("There was an error submitting your form.");
+            }
         } else {
             setError(errors);
         }
-        const testimonialsCollectionRef = collection(db, "testimonials");
-        await addDoc(testimonialsCollectionRef, {
-            name: testimonial.name,
-            message: testimonial.message,
-            rating: testimonial.rating,
-        });
     };
 
     return (
         <div style={styles.container}>
-            <h2 style={styles.heading}>Submit Your Testimonial/Reports/Issue/Rating</h2>
+            <h2 style={styles.heading}>Submit Your Testimonial/Report/Issue/Rating</h2>
             <form onSubmit={handleSubmit} style={styles.form}>
+                <FormControl fullWidth style={styles.dropdown}>
+                    <InputLabel id="submission-type-label">Submission Type</InputLabel>
+                    <Select
+                        labelId="submission-type-label"
+                        id="submission-type"
+                        value={submission.type}
+                        name="type"
+                        onChange={handleInputChange}
+                    >
+                        <MenuItem value="Testimonial">Testimonial</MenuItem>
+                        <MenuItem value="Report">Report</MenuItem>
+                        <MenuItem value="Issue">Issue</MenuItem>
+                        <MenuItem value="Rating">Rating</MenuItem>
+                    </Select>
+                </FormControl>
+                {error.type && <p style={styles.error}>{error.type}</p>}
+
                 <TextField
                     label="Name"
                     variant="outlined"
                     fullWidth
                     name="name"
-                    value={testimonial.name}
+                    value={submission.name}
                     onChange={handleInputChange}
                     style={{ ...styles.textField, backgroundColor: '#2b2b2b' }}
                 />
                 {error.name && <p style={styles.error}>{error.name}</p>}
 
                 <TextField
-                    label="Testimonial"
+                    label="Message"
                     variant="outlined"
                     fullWidth
                     name="message"
                     multiline
                     rows={4}
-                    value={testimonial.message}
+                    value={submission.message}
                     onChange={handleInputChange}
                     style={{ ...styles.textField, backgroundColor: '#2b2b2b' }}
                 />
                 {error.message && <p style={styles.error}>{error.message}</p>}
 
-                <TextField
-                    label="Rating"
-                    variant="outlined"
-                    fullWidth
-                    type="number"
-                    name="rating"
-                    value={testimonial.rating}
-                    onChange={handleInputChange}
-                    inputProps={{ min: 1, max: 5 }}
-                    style={{ ...styles.textField, backgroundColor: '#2b2b2b' }}
-                />
+                {submission.type === 'Rating' && (
+                    <TextField
+                        label="Rating"
+                        variant="outlined"
+                        fullWidth
+                        type="number"
+                        name="rating"
+                        value={submission.rating}
+                        onChange={handleInputChange}
+                        inputProps={{ min: 1, max: 5 }}
+                        style={{ ...styles.textField, backgroundColor: '#2b2b2b' }}
+                    />
+                )}
                 {error.rating && <p style={styles.error}>{error.rating}</p>}
 
                 <Button type="submit" variant="contained" style={styles.button}>
@@ -154,6 +174,10 @@ const styles = {
         marginTop: '15px',
         transition: 'transform 0.3s, box-shadow 0.3s',
         boxShadow: '0 0 15px rgba(255, 0, 102, 0.5)',
+    },
+    dropdown: {
+        marginBottom: '15px',
+        backgroundColor: '#2b2b2b',
     },
     error: {
         color: 'red',
