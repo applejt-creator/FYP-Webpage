@@ -1,6 +1,11 @@
 // src/pages/Reports.js
 import React, { useState, useEffect } from 'react';
 import { Button, TextField, Box } from '@mui/material';
+import {
+    collection,
+    addDoc,
+  } from "firebase/firestore";
+import { db } from '../firebase';
 
 const initialTestimonials = JSON.parse(localStorage.getItem('testimonials')) || [
     { name: "Alice", message: "Great product!", rating: 5 },
@@ -21,7 +26,7 @@ function Reports() {
         setTestimonial({ ...testimonial, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const errors = {};
 
@@ -49,6 +54,12 @@ function Reports() {
         } else {
             setError(errors);
         }
+        const testimonialsCollectionRef = collection(db, "testimonials");
+        await addDoc(testimonialsCollectionRef, {
+            name: testimonial.name,
+            message: testimonial.message,
+            rating: testimonial.rating,
+        });
     };
 
     return (

@@ -1,6 +1,11 @@
 // src/pages/Testimonials.js
 import React, { useState, useEffect } from 'react';
 import { Button, TextField, Box } from '@mui/material';
+import { db } from '../firebase';
+import {
+    collection,
+    getDocs
+  } from "firebase/firestore";
 
 const initialTestimonials = JSON.parse(localStorage.getItem('testimonials')) || [
     { name: "Alice", message: "Great product!", rating: 5 },
@@ -18,6 +23,23 @@ function TestimonialCard({ name, message, rating }) {
 
 function Testimonials() {
     const [allTestimonials, setAllTestimonials] = useState(initialTestimonials);
+    const [reviews, setReviews] = useState([]);
+
+    const fetchReview = async () => {
+        const testimonialsCollectionRef = collection(db, "testimonials");
+        const testimonialsDoc = await getDocs(testimonialsCollectionRef);
+        const testimonialsData = testimonialsDoc.docs.map((doc) => {
+            return {
+                id: doc.id,
+                ...doc.data(),
+            };
+        });
+        setReviews(testimonialsData);
+    };
+
+    useEffect(() => {
+        fetchReview();
+    }, []);
 
     useEffect(() => {
         const storedTestimonials = JSON.parse(localStorage.getItem('testimonials')) || [];
@@ -28,7 +50,7 @@ function Testimonials() {
         <div style={styles.container}>
             <h2 style={styles.heading}>Testimonials</h2>
             <ul style={styles.list}>
-                {allTestimonials.map((testimonial, index) => (
+                {reviews.map((testimonial, index) => (
                     <TestimonialCard
                         key={index}
                         name={testimonial.name || "Anonymous"}
