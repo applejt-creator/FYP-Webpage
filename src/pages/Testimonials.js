@@ -16,6 +16,7 @@ function Testimonials() {
     const [allTestimonials, setAllTestimonials] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedType, setSelectedType] = useState('');
+    const [minRating, setMinRating] = useState('');
     const [filteredTestimonials, setFilteredTestimonials] = useState([]);
 
     const fetchReview = async () => {
@@ -37,10 +38,11 @@ function Testimonials() {
             (testimonial) =>
                 (selectedType === '' || testimonial.type === selectedType) &&
                 (testimonial.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    testimonial.message.toLowerCase().includes(searchTerm.toLowerCase()))
+                    testimonial.message.toLowerCase().includes(searchTerm.toLowerCase())) &&
+                (minRating === '' || testimonial.rating >= minRating)
         );
         setFilteredTestimonials(filtered);
-    }, [searchTerm, selectedType, allTestimonials]);
+    }, [searchTerm, selectedType, minRating, allTestimonials]);
 
     return (
         <div style={styles.container}>
@@ -68,6 +70,19 @@ function Testimonials() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={styles.search}
             />
+
+            <FormControl fullWidth style={styles.dropdown}>
+                <InputLabel>Min Rating</InputLabel>
+                <Select
+                    value={minRating}
+                    onChange={(e) => setMinRating(e.target.value)}
+                >
+                    <MenuItem value="">All</MenuItem>
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                        <MenuItem key={rating} value={rating}>{rating}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
 
             <ul style={styles.list}>
                 {filteredTestimonials.map((testimonial, index) => (

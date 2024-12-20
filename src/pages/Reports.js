@@ -1,7 +1,7 @@
 // src/pages/Reports.js
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, Box, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
-import { collection, addDoc } from "firebase/firestore";
+import { Button, TextField, Box, MenuItem, Select, FormControl, InputLabel, Snackbar } from '@mui/material';
+import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from '../firebase';
 
 function Reports() {
@@ -12,55 +12,58 @@ function Reports() {
         rating: '',
     });
     const [error, setError] = useState({});
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setSubmission({ ...submission, [name]: value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const validateForm = () => {
         const errors = {};
 
-        // Validate type
-        if (!submission.type) {
-            errors.type = 'Submission type is required';
+        if (!submission.type) errors.type = 'Submission type is required';
+        if (!submission.name) errors.name = 'Name is required';
+        if (!submission.message) errors.message = 'Message is required';
+
+        if (submission.type === 'Rating') {
+            if (!submission.rating || submission.rating < 1 || submission.rating > 5) {
+                errors.rating = 'Rating must be between 1 and 5';
+            }
         }
 
-        // Validate name
-        if (!submission.name) {
-            errors.name = 'Name is required';
-        }
+        return errors;
+    };
 
-        // Validate message
-        if (!submission.message) {
-            errors.message = 'Message is required';
-        }
-
-        // Validate rating only if type is "Rating"
-        if (submission.type === 'Rating' && (!submission.rating || submission.rating < 1 || submission.rating > 5)) {
-            errors.rating = 'Rating must be between 1 and 5';
-        }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const errors = validateForm();
 
         if (Object.keys(errors).length === 0) {
             try {
-                const submissionsCollectionRef = collection(db, submission.type.toLowerCase()); // Save to collection based on type
+                const submissionsCollectionRef = collection(db, 'testimonial');
                 await addDoc(submissionsCollectionRef, {
                     name: submission.name,
                     message: submission.message,
-                    rating: submission.rating || null, // Only include rating if applicable
+                    rating: submission.rating || null,
                     type: submission.type,
                 });
-                alert(`${submission.type} submitted successfully!`);
+                setSnackbarMessage(`${submission.type} submitted successfully!`);
+                setOpenSnackbar(true);
                 setSubmission({ type: '', name: '', message: '', rating: '' });
-                setError({});
             } catch (error) {
                 console.error("Error adding submission: ", error);
-                alert("There was an error submitting your form.");
+                setSnackbarMessage("There was an error submitting your form.");
+                setOpenSnackbar(true);
             }
         } else {
             setError(errors);
         }
+    };
+
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
     };
 
     return (
@@ -127,6 +130,13 @@ function Reports() {
                     Submit
                 </Button>
             </form>
+
+            <Snackbar
+                open={openSnackbar}
+                message={snackbarMessage}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+            />
         </div>
     );
 }
