@@ -1,40 +1,32 @@
 // src/pages/Testimonials.js
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, Box } from '@mui/material';
+import { TextField, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { db } from '../firebase';
-import {
-    collection,
-    getDocs
-  } from "firebase/firestore";
+import { collection, getDocs } from 'firebase/firestore';
 
-const initialTestimonials = JSON.parse(localStorage.getItem('testimonials')) || [
-    { name: "Alice", message: "Great product!", rating: 5 },
-    { name: "Bob", message: "Really helped me in my project.", rating: 4 },
-    { name: "Charlie", message: "Excellent support and functionality!", rating: 5 },
-];
-
-function TestimonialCard({ name, message, rating }) {
+function TestimonialCard({ name, message, rating, type }) {
     return (
         <li style={styles.card}>
-            <strong>{name}</strong>: {message} - Rating: {rating}/5
+            <strong>{name}</strong>: {message} - Rating: {rating}/5 (Type: {type})
         </li>
     );
 }
 
 function Testimonials() {
-    const [allTestimonials, setAllTestimonials] = useState(initialTestimonials);
-    const [reviews, setReviews] = useState([]);
+    const [allTestimonials, setAllTestimonials] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedType, setSelectedType] = useState('');
+    const [minRating, setMinRating] = useState('');
+    const [filteredTestimonials, setFilteredTestimonials] = useState([]);
 
     const fetchReview = async () => {
-        const testimonialsCollectionRef = collection(db, "testimonials");
+        const testimonialsCollectionRef = collection(db, 'testimonial');
         const testimonialsDoc = await getDocs(testimonialsCollectionRef);
-        const testimonialsData = testimonialsDoc.docs.map((doc) => {
-            return {
-                id: doc.id,
-                ...doc.data(),
-            };
-        });
-        setReviews(testimonialsData);
+        const testimonialsData = testimonialsDoc.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+        setAllTestimonials(testimonialsData);
     };
 
     useEffect(() => {
@@ -42,20 +34,64 @@ function Testimonials() {
     }, []);
 
     useEffect(() => {
-        const storedTestimonials = JSON.parse(localStorage.getItem('testimonials')) || [];
-        setAllTestimonials(storedTestimonials);
-    }, []);
+        const filtered = allTestimonials.filter(
+            (testimonial) =>
+                (selectedType === '' || testimonial.type === selectedType) &&
+                (testimonial.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    testimonial.message.toLowerCase().includes(searchTerm.toLowerCase())) &&
+                (minRating === '' || testimonial.rating >= minRating)
+        );
+        setFilteredTestimonials(filtered);
+    }, [searchTerm, selectedType, minRating, allTestimonials]);
 
     return (
         <div style={styles.container}>
             <h2 style={styles.heading}>Testimonials</h2>
+
+            <FormControl fullWidth style={styles.dropdown}>
+                <InputLabel>Filter by Type</InputLabel>
+                <Select
+                    value={selectedType}
+                    onChange={(e) => setSelectedType(e.target.value)}
+                >
+                    <MenuItem value="">All</MenuItem>
+                    <MenuItem value="Testimonial">Testimonial</MenuItem>
+                    <MenuItem value="Report">Report</MenuItem>
+                    <MenuItem value="Issue">Issue</MenuItem>
+                    <MenuItem value="Rating">Rating</MenuItem>
+                </Select>
+            </FormControl>
+
+            <TextField
+                label="Search"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={styles.search}
+            />
+
+            <FormControl fullWidth style={styles.dropdown}>
+                <InputLabel>Min Rating</InputLabel>
+                <Select
+                    value={minRating}
+                    onChange={(e) => setMinRating(e.target.value)}
+                >
+                    <MenuItem value="">All</MenuItem>
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                        <MenuItem key={rating} value={rating}>{rating}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+
             <ul style={styles.list}>
-                {reviews.map((testimonial, index) => (
+                {filteredTestimonials.map((testimonial, index) => (
                     <TestimonialCard
                         key={index}
-                        name={testimonial.name || "Anonymous"}
+                        name={testimonial.name || 'Anonymous'}
                         message={testimonial.message}
                         rating={testimonial.rating}
+                        type={testimonial.type || 'General'}
                     />
                 ))}
             </ul>
@@ -65,7 +101,7 @@ function Testimonials() {
 
 const styles = {
     container: {
-        padding: '190px',
+        padding: '50px',
         maxWidth: '1000px',
         margin: 'auto',
         fontFamily: 'Orbitron, sans-serif',
@@ -100,6 +136,14 @@ const styles = {
         boxShadow: '0 0 30px rgba(255, 0, 102, 0.6)',
         transition: 'transform 0.3s, box-shadow 0.3s, background-color 0.3s',
         cursor: 'pointer',
+    },
+    search: {
+        marginBottom: '20px',
+        backgroundColor: '#fff',
+        borderRadius: '4px',
+    },
+    dropdown: {
+        marginBottom: '20px',
     },
 };
 
